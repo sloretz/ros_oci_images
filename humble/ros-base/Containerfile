@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM ros:humble-ros-core-jammy
+FROM ghcr.io/sloretz/ros_oci_images:humble-ros-core
 
 # install bootstrap tools
 RUN apt-get update && apt-get install --no-install-recommends -y \
