@@ -3,8 +3,8 @@ set -eux -o pipefail
 
 
 function build_ros_core() {
-    from=$1
-    rosdistro=$2
+    rosdistro=$1
+    from=$2
     nameandtag=$3
 
     container=$(buildah from $from)
@@ -59,4 +59,4 @@ function build_ros_core() {
     buildah commit $container $nameandtag
 }
 
-build_ros_core ubuntu:jammy humble ros_oci_images:humble-ros-core
+build_ros_core humble ubuntu:jammy ros_oci_images:humble-ros-core
