@@ -105,3 +105,8 @@ class BuildahContainer:
         cmd.append(self.full_name)
         _check_call(cmd, self.dry_run)
         self.__committed = True
+
+    def rm(self):
+        if self.__committed:
+            raise RuntimeError("Container is already committed")
+        _check_call(["buildah", "rm", self.__container])

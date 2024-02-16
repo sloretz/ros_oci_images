@@ -12,12 +12,12 @@ ARCHITECTURES = (
     "arm64/v8",
 )
 
-ROS_DISTROS = (
-    ("noetic", "ubuntu:focal"),
-    ("humble", "ubuntu:jammy"),
-    ("iron", "ubuntu:jammy"),
-    ("rolling", "ubuntu:jammy"),
-)
+ROS_DISTROS = {
+    "noetic": ("ubuntu:focal", ("amd64", "arm/v7", "arm64/v8")),
+    "humble": ("ubuntu:jammy", ("amd64", "arm64/v8")),
+    "iron": ("ubuntu:jammy", ("amd64", "arm64/v8")),
+    "rolling": ("ubuntu:jammy", ("amd64", "arm64/v8")),
+}
 
 
 def parse_arguments():
@@ -30,7 +30,7 @@ def parse_arguments():
 
     args = parser.parse_args()
 
-    if args.rosdistro.lower() not in [d[0] for d in ROS_DISTROS]:
+    if args.rosdistro.lower() not in ROS_DISTROS:
         sys.stderr.write(f"Unsupported ROS DISTRO: {args.rosdistro}\n")
         sys.exit(1)
 
@@ -40,7 +40,7 @@ def parse_arguments():
             sys.exit(1)
 
     if not args.architectures:
-        args.architectures = ARCHITECTURES
+        args.architectures = ROS_DISTROS[args.rosdistro.lower()][1]
 
     return args
 
@@ -50,9 +50,7 @@ def main():
 
     rosdistro = args.rosdistro.lower()
 
-    for d, base_image in ROS_DISTROS:
-        if d == rosdistro:
-            break
+    base_image, _ = ROS_DISTROS[rosdistro]
 
     if "noetic" == rosdistro:
         ros1.build_images(

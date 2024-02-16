@@ -36,19 +36,15 @@ def build_images(
         architectures=architectures,
         dry_run=dry_run,
     )
-    try:
-        # Not available on all architectures
-        build_one_package_image(
-            f"ros-{rosdistro}-desktop-full",
-            registry=registry,
-            name=name,
-            tag=f"{rosdistro}-desktop-full",
-            base_image=ros_desktop,
-            architectures=architectures,
-            dry_run=dry_run,
-        )
-    except subprocess.CalledProcessError:
-       pass
+    build_one_package_image(
+        f"ros-{rosdistro}-desktop-full",
+        registry=registry,
+        name=name,
+        tag=f"{rosdistro}-desktop-full",
+        base_image=ros_desktop,
+        architectures=architectures,
+        dry_run=dry_run,
+    )
     build_one_package_image(
         f"ros-{rosdistro}-perception",
         registry=registry,
@@ -58,19 +54,15 @@ def build_images(
         architectures=architectures,
         dry_run=dry_run,
     )
-    try:
-        # Not available on all architectures
-        build_one_package_image(
-            f"ros-{rosdistro}-simulators",
-            registry=registry,
-            name=name,
-            tag=f"{rosdistro}-simulators",
-            base_image=ros_base,
-            architectures=architectures,
-            dry_run=dry_run,
-        )
-    except subprocess.CalledProcessError:
-       pass
+    build_one_package_image(
+        f"ros-{rosdistro}-simulators",
+        registry=registry,
+        name=name,
+        tag=f"{rosdistro}-simulators",
+        base_image=ros_base,
+        architectures=architectures,
+        dry_run=dry_run,
+    )
     build_one_package_image(
         f"ros-{rosdistro}-viz",
         registry=registry,
@@ -107,24 +99,27 @@ def build_one_package_image(
             manifest=manifest,
             dry_run=dry_run,
         )
+        try:
+            # Install one package.
+            b.run(["apt-get", "update"])
+            b.run(
+                [
+                    "apt-get",
+                    "install",
+                    "-y",
+                    "--no-install-recommends",
+                    package,
+                ]
+            )
 
-        # Install once packages
-        b.run(["apt-get", "update"])
-        b.run(
-            [
-                "apt-get",
-                "install",
-                "-y",
-                "--no-install-recommends",
-                package,
-            ]
-        )
+            # Cleanup unnecessary stuff
+            b.run(["rm", "-rf", "/var/lib/apt/lists/*"])
 
-        # Cleanup unnecessary stuff
-        b.run(["rm", "-rf", "/var/lib/apt/lists/*"])
-
-        # Tag the image
-        b.commit()
+            # Tag the image
+            b.commit()
+        except subprocess.CalledProcessError:
+            # Package might not be available on this architecture.
+            b.rm()
 
     return manifest.full_name
 
