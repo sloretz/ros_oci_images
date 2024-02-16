@@ -1,3 +1,6 @@
+
+import subprocess
+
 from .buildah import arch_specific_tag
 from .buildah import BuildahContainer
 from .buildah import BuildahManifest
@@ -33,15 +36,19 @@ def build_images(
         architectures=architectures,
         dry_run=dry_run,
     )
-    build_one_package_image(
-        f"ros-{rosdistro}-desktop-full",
-        registry=registry,
-        name=name,
-        tag=f"{rosdistro}-desktop-full",
-        base_image=ros_desktop,
-        architectures=architectures,
-        dry_run=dry_run,
-    )
+    try:
+        # Not available on all architectures
+        build_one_package_image(
+            f"ros-{rosdistro}-desktop-full",
+            registry=registry,
+            name=name,
+            tag=f"{rosdistro}-desktop-full",
+            base_image=ros_desktop,
+            architectures=architectures,
+            dry_run=dry_run,
+        )
+    except subprocess.CalledProcessError:
+       pass
     build_one_package_image(
         f"ros-{rosdistro}-perception",
         registry=registry,
