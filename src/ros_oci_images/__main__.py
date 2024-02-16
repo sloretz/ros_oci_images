@@ -23,7 +23,7 @@ ROS_DISTROS = (
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", default="localhost", type=str)
-    parser.add_argument("--name", default="ros_oci_images", type=str)
+    parser.add_argument("--name", default="ros", type=str)
     parser.add_argument("--rosdistro", required=True, type=str)
     parser.add_argument("--architectures", default=[], action="append")
     parser.add_argument("--dry-run", action="store_true")
