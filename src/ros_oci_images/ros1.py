@@ -58,15 +58,19 @@ def build_images(
         architectures=architectures,
         dry_run=dry_run,
     )
-    build_one_package_image(
-        f"ros-{rosdistro}-simulators",
-        registry=registry,
-        name=name,
-        tag=f"{rosdistro}-simulators",
-        base_image=ros_base,
-        architectures=architectures,
-        dry_run=dry_run,
-    )
+    try:
+        # Not available on all architectures
+        build_one_package_image(
+            f"ros-{rosdistro}-simulators",
+            registry=registry,
+            name=name,
+            tag=f"{rosdistro}-simulators",
+            base_image=ros_base,
+            architectures=architectures,
+            dry_run=dry_run,
+        )
+    except subprocess.CalledProcessError:
+       pass
     build_one_package_image(
         f"ros-{rosdistro}-viz",
         registry=registry,
