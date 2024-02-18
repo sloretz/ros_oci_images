@@ -98,6 +98,7 @@ def _buildah_ros_image(
     cmd = [
         "buildah",
         "bud",
+        "--pull=false",
         "-t",
         full_name,
         "--build-arg",
