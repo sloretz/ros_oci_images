@@ -26,10 +26,12 @@ RUN echo 'Etc/UTC' > /etc/timezone && \
     rm -rf /var/lib/apt/lists/*
 
 # Install packages
+# ca-certificates is to get https to work when initializing rosdep in ros-base
 RUN apt-get update && apt-get install -q -y --no-install-recommends \
     dirmngr \
     gnupg2 \
     lsb-release \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Setup keys
