@@ -48,7 +48,7 @@ jobs:
             --rosdistro "${{ inputs.ros_distro }}" \
             --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
-            --dry-run | grep CREATING | awk '{print $2}' >> "$GITHUB_OUTPUT"
+            --dry-run | grep CREATING | awk '{print $2}' | tr '\n' ' ' >> "$GITHUB_OUTPUT"
 
       - name: Build Images
         run: |
