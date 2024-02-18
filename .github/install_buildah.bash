@@ -1,13 +1,14 @@
 #!/bin/bash
 set -eu -o pipefail
 
+sudo add-apt-repository ppa:longsleep/golang-backports
 sudo apt-get update
 sudo apt-get install -y \
     bats \
     btrfs-progs \
     git \
     go-md2man \
-    golang \
+    golang-1.21 \
     libapparmor-dev \
     libglib2.0-dev \
     libgpgme11-dev \
