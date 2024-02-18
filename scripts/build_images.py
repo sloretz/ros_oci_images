@@ -93,7 +93,7 @@ def _buildah_ros_image(
     if skip_if_exists and _image_exists(full_name):
         return full_name
 
-    print("CREATING", full_name)
+    print("IMAGE", full_name)
 
     cmd = [
         "buildah",
@@ -122,7 +122,7 @@ def _buildah_ros_image(
 
 def _buildah_manifest(registry, name, tag, image_names, dry_run):
     full_name = _full_name(registry, name, tag)
-    print("CREATING", full_name)
+    print("MANIFEST", full_name)
 
     create_cmd = ["buildah", "manifest", "create", full_name]
     if dry_run:

@@ -66,11 +66,11 @@ jobs:
       - name: Get Image Names
         id: image-names
         run: |
-          tags=$(./scripts/build_images.py \
+          manifests=$(./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
             --name "${{ inputs.image_name }}" \
-            --dry-run | grep CREATING | awk '{print $2}' | tr '\n' ' ')
-          echo "tags=${tags}" >> "${GITHUB_OUTPUT}"
+            --dry-run | grep MANIFEST | awk '{print $2}' | sort | uniq | tr '\n' ' ')
+          echo "manifests=${manifests}" >> "${GITHUB_OUTPUT}"
 
       - name: Build Images
         run: |
@@ -84,7 +84,7 @@ jobs:
         with:
           image: ${{ inputs.image_name }}
           registry: ${{ inputs.image_registry }}
-          tags: ${{ steps.image-names.outputs.tags }}
+          tags: ${{ steps.image-names.outputs.manifests }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
