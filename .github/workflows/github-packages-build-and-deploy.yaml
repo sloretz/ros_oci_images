@@ -34,25 +34,28 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
       - name: Dry Run
-        run: ./scripts/build_images.py \
-          --rosdistro "${{ inputs.ros_distro }}" \
-          --registry "${{ inputs.image_registry }}" \
-          --name "${{ inputs.image_name }}" \
-          --dry-run
+        run: |
+          ./scripts/build_images.py \
+            --rosdistro "${{ inputs.ros_distro }}" \
+            --registry "${{ inputs.image_registry }}" \
+            --name "${{ inputs.image_name }}" \
+            --dry-run
 
       - name: Get Image Names
         id: image-names
-        run: ./scripts/build_images.py \
-          --rosdistro "${{ inputs.ros_distro }}" \
-          --registry "${{ inputs.image_registry }}" \
-          --name "${{ inputs.image_name }}" \
-          --dry-run | grep CREATING | awk '{print $2}' >> "$GITHUB_OUTPUT"
+        run: |
+          ./scripts/build_images.py \
+            --rosdistro "${{ inputs.ros_distro }}" \
+            --registry "${{ inputs.image_registry }}" \
+            --name "${{ inputs.image_name }}" \
+            --dry-run | grep CREATING | awk '{print $2}' >> "$GITHUB_OUTPUT"
 
       - name: Build Images
-        run: ./scripts/build_images.py \
-          --rosdistro "${{ inputs.ros_distro }}" \
-          --registry "${{ inputs.image_registry }}" \
-          --name "${{ inputs.image_name }}"
+        run: |
+          ./scripts/build_images.py \
+            --rosdistro "${{ inputs.ros_distro }}" \
+            --registry "${{ inputs.image_registry }}" \
+            --name "${{ inputs.image_name }}"
 
       - name: Push to Github Packages
         id: deploy
