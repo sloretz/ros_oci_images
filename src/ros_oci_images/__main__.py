@@ -8,15 +8,15 @@ from . import ros2
 
 ARCHITECTURES = (
     "amd64",
-    "arm/v7",
-    "arm64/v8",
+    "arm",
+    "arm64",
 )
 
 ROS_DISTROS = {
-    "noetic": ("ubuntu:focal", ("amd64", "arm/v7", "arm64/v8")),
-    "humble": ("ubuntu:jammy", ("amd64", "arm64/v8")),
-    "iron": ("ubuntu:jammy", ("amd64", "arm64/v8")),
-    "rolling": ("ubuntu:jammy", ("amd64", "arm64/v8")),
+    "noetic": ("ubuntu:focal", ("amd64", "arm", "arm64")),
+    "humble": ("ubuntu:jammy", ("amd64", "arm64")),
+    "iron": ("ubuntu:jammy", ("amd64", "arm64")),
+    "rolling": ("ubuntu:jammy", ("amd64", "arm64")),
 }
 
 
