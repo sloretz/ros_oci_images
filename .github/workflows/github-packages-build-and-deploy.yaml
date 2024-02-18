@@ -44,11 +44,12 @@ jobs:
       - name: Get Image Names
         id: image-names
         run: |
-          ./scripts/build_images.py \
+          tags=$(./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
             --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
-            --dry-run | grep CREATING | awk '{print $2}' | tr '\n' ' ' >> "$GITHUB_OUTPUT"
+            --dry-run | grep CREATING | awk '{print $2}' | tr '\n' ' ')
+          echo "tags=${tags}" >> "${GITHUB_OUTPUT}"
 
       - name: Build Images
         run: |
@@ -62,7 +63,7 @@ jobs:
         uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
         with:
           image: 
-          tags: ${{ steps.image-names.outputs.output1 }}
+          tags: ${{ steps.image-names.outputs.tags }}
           registry: ${{ inputs.image_registry }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
