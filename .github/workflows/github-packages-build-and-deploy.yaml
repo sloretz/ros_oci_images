@@ -21,12 +21,12 @@ on:
         default: "ros"
         type: string
 
+permissions:
+      packages: write
+      contents: read
 
 jobs:
   build-and-deploy:
-    permissions:
-      packages: write
-      contents: read
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
@@ -62,9 +62,7 @@ jobs:
         id: deploy
         uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
         with:
-          image: 
           tags: ${{ steps.image-names.outputs.tags }}
-          registry: ${{ inputs.image_registry }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
