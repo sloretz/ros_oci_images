@@ -53,6 +53,7 @@ def retry_with_backoff(func):
                     "Hmm container failed to build, retrying in case it's network related"
                 )
                 time.sleep(i * i * 15)
+        raise RuntimeError("Unable to build image")
 
     return new_func
 
