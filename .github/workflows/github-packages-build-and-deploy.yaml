@@ -47,7 +47,6 @@ jobs:
         run: |
           ./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
             --dry-run
 
@@ -56,7 +55,6 @@ jobs:
         run: |
           tags=$(./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
             --dry-run | grep CREATING | awk '{print $2}' | tr '\n' ' ')
           echo "tags=${tags}" >> "${GITHUB_OUTPUT}"
@@ -65,13 +63,14 @@ jobs:
         run: |
           ./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}"
 
       - name: Push to Github Packages
         id: deploy
         uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
         with:
+          image: ${{ inputs.image_name }}
+          registry: ${{ inputs.image_registry }}
           tags: ${{ steps.image-names.outputs.tags }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
