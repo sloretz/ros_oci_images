@@ -28,9 +28,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     python3-vcstools \
     && rm -rf /var/lib/apt/lists/*
 
-# bootstrap rosdep
-RUN rosdep init && \
-  rosdep update --rosdistro $ROS_DISTRO
+# Bootstrap rosdep
+# Retry because fetching this file from github is unusually flaky
+RUN bash -c 'for i in {1..5}; do rosdep init && break || sleep 15; done'
+RUN rosdep update --rosdistro $ROS_DISTRO
 
 # install ros packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
