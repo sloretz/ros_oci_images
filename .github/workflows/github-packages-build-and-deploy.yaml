@@ -37,7 +37,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y qemu-user-static
 
       - name: Build buildah from source
-        run: ./github/install_buildah.bash
+        run: ./.github/install_buildah.bash
 
       - name: Log in to ghcr.io
         uses: redhat-actions/podman-login@9184318aae1ee5034fbfbacc0388acf12669171f  # v1
