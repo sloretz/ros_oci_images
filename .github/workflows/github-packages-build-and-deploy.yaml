@@ -1,0 +1,66 @@
+# This workflow builds and pushes images to Github Packages.
+
+name: Build and Deploy to Github Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      ros_distro:
+        description: ROS Distro to build
+        options:
+        - noetic
+        - humble
+        - iron
+        - rolling
+      image_registry:
+        description: The container registry to push to (must be ghcr.io)
+        default: "ghcr.io/sloretz"
+        type: string
+      image_name:
+        description: The name of the image
+        default: "ros"
+        type: string
+
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    permissions:
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+      - name: Dry Run
+        run: ./scripts/build_images \
+          --rosdistro "${{ inputs.ros_distro }}" \
+          --registry "${{ inputs.image_registry }}" \
+          --name "${{ inputs.image_name }}" \
+          --dry-run
+
+      - name: Get Image Names
+        id: image-names
+        run: ./scripts/build_images \
+          --rosdistro "${{ inputs.ros_distro }}" \
+          --registry "${{ inputs.image_registry }}" \
+          --name "${{ inputs.image_name }}" \
+          --dry-run | grep CREATING | awk '{print $2}' >> "$GITHUB_OUTPUT"
+
+      - name: Build Images
+        run: ./scripts/build_images \
+          --rosdistro "${{ inputs.ros_distro }}" \
+          --registry "${{ inputs.image_registry }}" \
+          --name "${{ inputs.image_name }}"
+
+      - name: Push to Github Packages
+        id: deploy
+        uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
+        with:
+          image: 
+          tags: ${{ steps.image-names.outputs.output1 }}
+          registry: ${{ inputs.image_registry }}
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Print Image URL
+        run: echo "Pushed image to ${{ steps.deploy.outputs.registry-paths }}"

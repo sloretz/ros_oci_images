@@ -93,6 +93,8 @@ def _buildah_ros_image(
     if skip_if_exists and _image_exists(full_name):
         return full_name
 
+    print("CREATING", full_name)
+
     cmd = [
         "buildah",
         "bud",
