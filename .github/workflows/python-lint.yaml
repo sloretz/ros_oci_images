@@ -8,8 +8,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
-      - uses: psf/black@stable
+      - uses: psf/black@6fdf8a4af28071ed1d079c01122b34c5d587207a  # 24.2.0
         with:
           options: "--check --verbose"
-          src: "./src"
+          src: "./scripts"
           version: "~= 24.0"
