@@ -1,0 +1,68 @@
+name: Test Deployed Images for one distro
+
+on:
+  workflow_dispatch:
+    inputs:
+      ros_distro:
+        type: choice
+        description: ROS Distro to build
+        options:
+        - noetic
+        - humble
+        - iron
+        - rolling
+      image_registry:
+        description: The container registry to pull from
+        default: "ghcr.io/sloretz"
+        type: string
+      image_name:
+        description: The name of the image
+        default: "ros"
+        type: string
+  workflow_call:
+    inputs:
+      ros_distro:
+        type: string
+        description: ROS Distro to build
+        required: true
+      image_registry:
+        description: The container registry to pull from
+        default: "ghcr.io/sloretz"
+        type: string
+      image_name:
+        description: The name of the image
+        default: "ros"
+        type: string
+
+permissions:
+  packages: read
+  contents: read
+
+jobs:
+  test-deployed-images:
+    name: Test Deployed Images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+      - name: Test Deployed Images (Dry run)
+        run: |
+          ./scripts/test_images.py \
+            --registry "${{ inputs.image_registry }}" \
+            --name "${{ inputs.image_name }}" \
+            --rosdistro "${{ inputs.ros_distro }}" \
+            --dry-run
+      - name: Test Deployed Images
+        run: |
+          ./scripts/test_images.py \
+            --registry "${{ inputs.image_registry }}" \
+            --name "${{ inputs.image_name }}" \
+            --rosdistro "${{ inputs.ros_distro }}"
