@@ -17,43 +17,6 @@ New to containers? Start with [Docker](https://docs.docker.com/get-docker/). It 
 docker run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
 ```
 
-### Other tools
-
-Used containers for a while?
-Other tools might be better fit your use case.
-I personally use [Podman](https://podman.io/) most of the time.
-
-[Apptainer](https://apptainer.org/)
-
-```
-apptainer run docker://ghcr.io/sloretz/ros:rolling-desktop ros2 --help
-```
-
-[Podman](https://podman.io/)
-
-```
-podman run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
-```
-
-[Rocker](https://github.com/osrf/rocker)
-
-```
-rocker ghcr.io/sloretz/ros:rolling-desktop ros2 -- --help
-```
-
-[Sarus](https://sarus.readthedocs.io/en/stable/#)
-
-```
-sarus pull ghcr.io/sloretz/ros:rolling-desktop
-sarus run -t ghcr.io/sloretz/ros:rolling-desktop ros2 --help
-```
-
-[SingularityCE](https://sylabs.io/singularity/)
-
-```
-singularity run docker://ghcr.io/sloretz/ros:rolling-desktop ros2 --help
-```
-
 ## About the images
 
 All images are updated once per week (Sunday at midnight GMT).
@@ -95,7 +58,63 @@ All images are based on Ubuntu.
 | robot           | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-robot`         |
 | viz             | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-viz`           |
 
-# Comparison to osrf/docker_images
+
+## Using with other OCI compatible tools
+
+Used containers for a while?
+Other tools might be better fit your use case.
+I personally use [Podman](https://podman.io/) most of the time.
+
+[Apptainer](https://apptainer.org/)
+
+```
+apptainer run docker://ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
+[Distrobox](https://github.com/89luca89/distrobox) (Requires Docker or Podman to be installed)
+
+```
+distrobox create --image ghcr.io/sloretz/ros:rolling-desktop --name rolling-desktop
+distrobox enter rolling-desktop
+. /opt/ros/rolling/setup.bash
+ros2 --help
+```
+
+[Podman](https://podman.io/)
+
+```
+podman run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
+[Rocker](https://github.com/osrf/rocker) (requires Docker to be installed)
+
+```
+rocker ghcr.io/sloretz/ros:rolling-desktop ros2 -- --help
+```
+
+[Sarus](https://sarus.readthedocs.io/en/stable/#)
+
+```
+sarus pull ghcr.io/sloretz/ros:rolling-desktop
+sarus run -t ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
+[SingularityCE](https://sylabs.io/singularity/)
+
+```
+singularity run docker://ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
+[Toolbox](https://containertoolbx.org/) (Requires Podman to be installed)
+
+```
+toolbox create --image ghcr.io/sloretz/ros:rolling-desktop rolling-desktop
+toolbox enter rolling-desktop
+. /opt/ros/rolling/setup.bash
+ros2 --help
+```
+
+## Comparison to osrf/docker_images
 
 This repo is a spiritual fork of [the official OSRF docker images](https://github.com/osrf/docker_images).
 The image definitions here were copied and modified from them.
