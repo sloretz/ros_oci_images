@@ -26,14 +26,13 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     python3-rosdep \
     python3-rosinstall \
     python3-vcstools \
-    curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Bootstrap rosdep
-# Retry because fetching this file from github is unusually flaky
-RUN curl -S https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list
-RUN bash -c 'for i in {1..5}; do rosdep init && break || sleep 15; done'
-RUN rosdep update --rosdistro $ROS_DISTRO
+# Workaround https://github.com/ros-infrastructure/rosdep/issues/934
+RUN sudo update-ca-certificates --fresh
+RUN rosdep init && rosdep update --rosdistro $ROS_DISTRO
 
 # install ros packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
