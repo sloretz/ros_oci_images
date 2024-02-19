@@ -53,6 +53,8 @@ jobs:
           large-packages: true
           docker-images: true
           swap-storage: true
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
       - name: Test Deployed Images (Dry run)
         run: |
           ./scripts/test_images.py \
