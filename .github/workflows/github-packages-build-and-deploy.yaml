@@ -60,6 +60,7 @@ jobs:
         run: |
           ./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
+            --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
             --dry-run
 
@@ -68,6 +69,7 @@ jobs:
         run: |
           manifests=$(./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
+            --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
             --dry-run | grep MANIFEST | awk '{print $2}' | sort | uniq | tr '\n' ' ')
           echo "manifests=${manifests}" >> "${GITHUB_OUTPUT}"
@@ -76,6 +78,7 @@ jobs:
         run: |
           ./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
+            --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}"
 
       - name: Push to Github Packages
