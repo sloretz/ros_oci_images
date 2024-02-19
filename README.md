@@ -3,17 +3,46 @@
 [Open Container Initiative](https://opencontainers.org/) images for [ROS](https://ros.org)!
 
 
+Are you looking for **Docker images**?
+You're in the right spot!
+OCI images are Docker images.
+[Here's how Docker and OCI relate](https://www.docker.com/blog/demystifying-open-container-initiative-oci-specifications/).
+
+
 ## Quick Start
 
-New to containers? Start with [Docker](https://docs.docker.com/get-docker/).
-
-Docker:
+New to containers? Start with [Docker](https://docs.docker.com/get-docker/). It has the most documentation and tutorials.
 
 ```
 docker run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
 ```
 
-[Podman](https://podman.io/):
+### Other tools
+
+Used containers for a while?
+Other tools might be better fit your use case.
+I personally use [Podman](https://podman.io/) most of the time.
+
+[Apptainer](https://apptainer.org/)
+
+```
+apptainer run docker://ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
+[Sarus](https://sarus.readthedocs.io/en/stable/#)
+
+```
+sarus pull ghcr.io/sloretz/ros:rolling-desktop
+sarus run -t ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
+[SingularityCE](https://sylabs.io/singularity/)
+
+```
+singularity run docker://ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
+[Podman](https://podman.io/)
 
 ```
 podman run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
