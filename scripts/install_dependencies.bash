@@ -1,6 +1,10 @@
 #!/bin/bash
 set -eu -o pipefail
 
+# Install qemu-user-static
+sudo apt-get update && sudo apt-get install -y qemu-user-static
+
+# Install dependencies needed to build buildah
 sudo add-apt-repository ppa:longsleep/golang-backports
 sudo apt-get update
 sudo apt-get install -y \
@@ -17,6 +21,7 @@ sudo apt-get install -y \
     make \
     skopeo
 
+# Build and install buildah from source
 git clone https://github.com/containers/buildah -b v1.34.0
 cd buildah
 make runc all SECURITYTAGS="apparmor seccomp"
