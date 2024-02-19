@@ -54,7 +54,7 @@ The ROS 1 distro [ROS Noetic](https://wiki.ros.org/noetic) has an image for each
 | ros-base        | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-ros-base`      |
 | desktop         | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-desktop`       |
 | perception      | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-perception`    |
-| simulators      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-simulation`    |
+| simulators      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-simulators`    |
 | desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-desktop-full`  |
 | robot           | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-robot`         |
 | viz             | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-viz`           |
