@@ -47,8 +47,8 @@ def _podman_run(full_name, extra_cmd, arch=None, variant=None, dry_run=False):
         subprocess.check_call(cmd)
 
 
-def _print_ros2_version(full_name, arch=None, variant=None, dry_run=False):
-    cmd = ["ros2", "--version"]
+def _print_ros2_help(full_name, arch=None, variant=None, dry_run=False):
+    cmd = ["ros2", "--help"]
     _podman_run(full_name, cmd, arch, variant, dry_run)
 
 
@@ -124,7 +124,7 @@ def main():
             for arch, variant in architectures:
                 _buildah_pull(full_name, dry_run)
                 _print_pkg_version(full_name, package, arch, variant, args.dry_run)
-                _print_ros2_version(full_name, arch, variant, dry_run)
+                _print_ros2_help(full_name, arch, variant, dry_run)
 
 
 if __name__ == "__main__":
