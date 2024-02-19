@@ -20,6 +20,23 @@ on:
         description: The name of the image
         default: "ros"
         type: string
+  workflow_call:
+    inputs:
+      ros_distro:
+        description: ROS Distro to build
+        options:
+        - noetic
+        - humble
+        - iron
+        - rolling
+      image_registry:
+        description: The container registry to push to (must be ghcr.io)
+        default: "ghcr.io/sloretz"
+        type: string
+      image_name:
+        description: The name of the image
+        default: "ros"
+        type: string
 
 permissions:
       packages: write
