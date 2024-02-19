@@ -1,4 +1,4 @@
-name: Build and Deploy All ROS Distros
+name: Test deployed images for all ROS Distros
 
 on:
   workflow_dispatch:
