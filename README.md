@@ -25,6 +25,7 @@ All images are updated once per week (Sunday at midnight GMT).
 
 The ROS 2 distros have an image for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
 The ROS 1 distro [ROS Noetic](https://wiki.ros.org/noetic) has an image for each [metapackage defined by REP 142](https://www.ros.org/reps/rep-0142.html).
+All images are based on Ubuntu.
 
 | Image           | amd64 | arm v7 | arm64 v8 | Full Image Name                            |
 |-----------------|-------|--------|----------|--------------------------------------------|
