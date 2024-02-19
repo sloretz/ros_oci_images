@@ -228,7 +228,7 @@ def build_ros1_images(
             images.desktop, "ros1/desktop-full", **common_args
         )
         images.simulators = _buildah_ros_image(
-            images.ros_base, "ros1/simulators", **common_args
+            images.robot, "ros1/simulators", **common_args
         )
 
     return images

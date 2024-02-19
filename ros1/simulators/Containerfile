@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ARG ROS_DISTRO=noetic
-ARG FROM=ros:${ROS_DISTRO}-ros-base
+ARG FROM=ros:${ROS_DISTRO}-ros-robot
 
 FROM ${FROM}
 
