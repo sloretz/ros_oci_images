@@ -29,6 +29,18 @@ I personally use [Podman](https://podman.io/) most of the time.
 apptainer run docker://ghcr.io/sloretz/ros:rolling-desktop ros2 --help
 ```
 
+[Podman](https://podman.io/)
+
+```
+podman run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
+[Rocker](https://github.com/osrf/rocker)
+
+```
+rocker ghcr.io/sloretz/ros:rolling-desktop ros2 -- --help
+```
+
 [Sarus](https://sarus.readthedocs.io/en/stable/#)
 
 ```
@@ -40,12 +52,6 @@ sarus run -t ghcr.io/sloretz/ros:rolling-desktop ros2 --help
 
 ```
 singularity run docker://ghcr.io/sloretz/ros:rolling-desktop ros2 --help
-```
-
-[Podman](https://podman.io/)
-
-```
-podman run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
 ```
 
 ## About the images
