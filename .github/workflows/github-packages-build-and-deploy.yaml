@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       ros_distro:
+        type: choice
         description: ROS Distro to build
         options:
         - noetic
@@ -24,11 +25,8 @@ on:
     inputs:
       ros_distro:
         description: ROS Distro to build
-        options:
-        - noetic
-        - humble
-        - iron
-        - rolling
+        type: string
+        required: true
       image_registry:
         description: The container registry to push to (must be ghcr.io)
         default: "ghcr.io/sloretz"
