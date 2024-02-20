@@ -43,7 +43,7 @@ Second, [build and install buildah from source](https://github.com/containers/bu
 
 There is a script to install the build dependencies: `./scripts/install_dependencies.bash`
 
-## Understand How the repository is structured
+### Understand How the repository is structured
 
 Understanding where everything is will help you make a contribution.
 
@@ -52,7 +52,7 @@ The python script is called using [Github Actions](https://github.com/features/a
 The images are pushed to [Github Packages](https://github.com/features/packages).
 Afterwards anyone can pull the image they need and run it.
 
-### What's in the ros1 and ros2 folders
+#### What's in the ros1 and ros2 folders
 
 The `ros1` and `ros2` folders hold [Containerfile](https://github.com/containers/common/blob/main/docs/Containerfile.5.md) definitions for ROS 1 and ROS 2 respectively.
 A `Containerfile`'s syntax is identical to a `Dockerfile`'s syntax.
@@ -105,7 +105,7 @@ After it's accepted we can create an image for it here.
 If you think there should be a new ROS 1 image, I would suggest not creating one.
 [ROS 1 is nearly end of life](https://endoflife.date/ros) and should be kept stable.
 
-### What's in the scripts folder
+#### What's in the scripts folder
 
 The `scripts` folder holds Python and Bash scripts used for building and testing the images
 
@@ -126,7 +126,7 @@ Run `./scripts/test_images.py --help` to see what options it takes.
 
 The `install_dependencies.bash` script installs the dependencies needed to build images on an Ubuntu 22.04 machine.
 
-### What's in the .github/workflows folder
+#### What's in the .github/workflows folder
 
 This folder contains github workflows.
 These are used to build and test the images.
