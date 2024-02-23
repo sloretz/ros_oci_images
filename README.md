@@ -19,7 +19,8 @@ docker run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
 
 ## About the images
 
-All images are updated once per week (Sunday at midnight GMT).
+All images are updated automatically within 6 hours of a sync.
+There are additionally updated once per week at midnight GMT on Sunday.
 
 The ROS 2 distros have an image for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
 The ROS 1 distro [ROS Noetic](https://wiki.ros.org/noetic) has an image for each [metapackage defined by REP 142](https://www.ros.org/reps/rep-0142.html).

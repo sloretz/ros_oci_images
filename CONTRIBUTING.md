@@ -133,21 +133,24 @@ These are used to build and test the images.
 
 ```
 .github/workflows/
+├── build-and-deploy-all-if-necessary.yaml
 ├── build-and-deploy-all.yaml
-├── github-packages-build-and-deploy.yaml
+├── build-and-deploy-one-ros-distro-if-necessary.yaml
+├── build-and-deploy-one-ros-distro.yaml
 ├── python-lint.yaml
-├── test-all-deployed-images.yaml
-└── test-deployed-images.yaml
+└── test-deployed-images-one-ros-distro.yaml
 ```
 
-The workflow `github-packages-build-and-deploy.yaml` is used to build all images for one ROS distro.
-It is called by `build-and-deploy-all.yaml`.
+The workflow `test-deployed-images-one-ros-distro.yaml` pulls all images for a given ROS distro and makes sure the `ros2` command can be used.
+
+The workflow `build-and-deploy-one-ros-distro.yaml` builds all images for a given ROS distro, pushes them to github actions, and then calls `test-deployed-images-one-ros-distro.yaml` to make sure they work.
+
+The workflow `build-and-deploy-one-ros-distro-if-necessary.yaml` checks if a new version of the `ros-core` package is available, and if so calls `build-and-deploy-one-ros-distro.yaml` to update it.
+This is probably a mistake.
+It should likely check all images for a ROS distro and trigger the rebuild job if any of them have an update available.
 
 The workflow `build-and-deploy-all-yaml` runs once per week and rebuilds all of the ROS images.
 
+The workflow `build-and-deploy-all-if-necessary.yaml` runs every 6 hours and calls `build-and-deploy-one-ros-distro-if-necessary.yaml` for every supported ROS distro.
+
 The workflow `python-lint.yaml` runs the [black Python linter](https://github.com/psf/black).
-
-The workflow `test-deployed-images.yaml` is used to pull all of the deployed images for one ROS distro and make sure it has the right packages installed.
-It is called by `test-all-deployed-images.yaml`
-
-The workflow `test-all-deployed-images.yaml` runs once per day and tests all of the deployed images.
