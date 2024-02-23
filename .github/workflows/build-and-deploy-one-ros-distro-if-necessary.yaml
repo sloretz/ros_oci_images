@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   check_for_update:
-    runs-on: "${{ inputs.image_registry }}/${{ inputs.image_name }}:ros-${{ inputs.ros_distro }}-ros-core"
+    runs-on: "${{ inputs.image_registry }}/${{ inputs.image_name }}:${{ inputs.ros_distro }}-ros-core"
     outputs:
       needs_update: "${{ steps.do_check.outputs.needs_update }}"
     steps:
