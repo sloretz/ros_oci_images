@@ -58,8 +58,8 @@ jobs:
           echo "needs_update=${result}" >> "${GITHUB_OUTPUT}"
 
   call-build-and-deploy:
-    if: ${{ needs.check_for_update.outputs.needs_update }} == 'YES'
     needs: check_for_update
+    if: needs.check_for_update.outputs.needs_update == 'YES'
     uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
     with:
       ros_distro: ${{ inputs.ros_distro }}
