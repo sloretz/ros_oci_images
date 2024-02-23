@@ -43,7 +43,6 @@ permissions:
 jobs:
   build-and-deploy:
     name: Build and Deploy
-    id: build_and_deploy
     runs-on: ubuntu-latest
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -108,7 +107,7 @@ jobs:
         run: echo "Pushed image to ${{ steps.deploy.outputs.registry-paths }}"
 
   call-test-deployed-images:
-    needs: build_and_deploy
+    needs: build-and-deploy
     uses: ./.github/workflows/test-deployed-images-one-ros-distro.yaml
     with:
       ros_distro: ${{ inputs.ros_distro }}
