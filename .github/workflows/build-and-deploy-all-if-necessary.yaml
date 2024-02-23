@@ -1,0 +1,28 @@
+name: Build and Deploy All ROS Distros If Necessary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours.
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+  call-build-and-deploy-noetic:
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
+    with:
+      ros_distro: noetic
+  call-build-and-deploy-humble:
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
+    with:
+      ros_distro: humble
+  call-build-and-deploy-iron:
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
+    with:
+      ros_distro: iron
+  call-build-and-deploy-rolling:
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
+    with:
+      ros_distro: rolling
