@@ -53,7 +53,7 @@ jobs:
         id: do_check
         run: |
           apt-get update
-          result=$(./scripts/is_new_version_available.py --apt-package "ros-${{ inputs.ros_distro }}-ros-core")
+          result=$(./scripts/is_new_version_available.py --apt-package "ros-${{ inputs.ros_distro }}-desktop-full")
           echo ${result}
           echo "needs_update=${result}" >> "${GITHUB_OUTPUT}"
 

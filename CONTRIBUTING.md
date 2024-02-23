@@ -145,9 +145,7 @@ The workflow `test-deployed-images-one-ros-distro.yaml` pulls all images for a g
 
 The workflow `build-and-deploy-one-ros-distro.yaml` builds all images for a given ROS distro, pushes them to github actions, and then calls `test-deployed-images-one-ros-distro.yaml` to make sure they work.
 
-The workflow `build-and-deploy-one-ros-distro-if-necessary.yaml` checks if a new version of the `ros-core` package is available, and if so calls `build-and-deploy-one-ros-distro.yaml` to update it.
-This is probably a mistake.
-It should likely check all images for a ROS distro and trigger the rebuild job if any of them have an update available.
+The workflow `build-and-deploy-one-ros-distro-if-necessary.yaml` checks if a new version of the `ros-$distro-desktop-full` package is available, and if so calls `build-and-deploy-one-ros-distro.yaml` to update it.
 
 The workflow `build-and-deploy-all-yaml` runs once per week and rebuilds all of the ROS images.
 
