@@ -39,6 +39,7 @@ permissions:
       contents: read
 
 jobs:
+
   check_for_update:
     runs-on: "${{ inputs.image_registry }}/${{ inputs.image_name }}:${{ inputs.ros_distro }}-ros-core"
     outputs:

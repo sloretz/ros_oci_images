@@ -39,6 +39,7 @@ permissions:
   contents: read
 
 jobs:
+
   test-deployed-images:
     name: Test Deployed Images
     runs-on: ubuntu-latest
