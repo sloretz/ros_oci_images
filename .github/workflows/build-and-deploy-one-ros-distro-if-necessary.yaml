@@ -1,0 +1,62 @@
+name: Build and Deploy One ROS Distro If Necessary
+
+on:
+  workflow_dispatch:
+    inputs:
+      ros_distro:
+        type: choice
+        description: ROS Distro to build
+        options:
+        - noetic
+        - humble
+        - iron
+        - rolling
+      image_registry:
+        description: The container registry to push to (must be ghcr.io)
+        default: "ghcr.io/sloretz"
+        type: string
+      image_name:
+        description: The name of the image
+        default: "ros"
+        type: string
+  workflow_call:
+    inputs:
+      ros_distro:
+        description: ROS Distro to build
+        type: string
+        required: true
+      image_registry:
+        description: The container registry to push to (must be ghcr.io)
+        default: "ghcr.io/sloretz"
+        type: string
+      image_name:
+        description: The name of the image
+        default: "ros"
+        type: string
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+  check_for_update:
+    runs-on: "${{ inputs.image_registry }}/${{ inputs.image_name }}:ros-${{ inputs.ros_distro }}-ros-core"
+    outputs:
+      needs_update: "${{ steps.do_check.outputs.needs_update }}"
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+      - id: do_check
+        run: |
+          result=$(./scripts/is_new_version_available.py \
+            --apt-package "ros-${{ inputs.ros_distro }}-ros-core")
+          echo "needs_update=$result" >> "${GITHUB_OUTPUT}"
+
+  call-build-and-deploy:
+    needs: check_for_update
+    if: "${{ needs.check_for_update.outputs.needs_update }}" == "YES"
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
+    with:
+      ros_distro: ${{ inputs.ros_distro }}
+      image_registry: ${{ inputs.image_registry }}
+      image_name: ${{ inputs.image_name }}

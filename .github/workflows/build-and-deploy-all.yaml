@@ -11,18 +11,18 @@ permissions:
 
 jobs:
   call-build-and-deploy-noetic:
-    uses: ./.github/workflows/github-packages-build-and-deploy.yaml
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
     with:
       ros_distro: noetic
   call-build-and-deploy-humble:
-    uses: ./.github/workflows/github-packages-build-and-deploy.yaml
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
     with:
       ros_distro: humble
   call-build-and-deploy-iron:
-    uses: ./.github/workflows/github-packages-build-and-deploy.yaml
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
     with:
       ros_distro: iron
   call-build-and-deploy-rolling:
-    uses: ./.github/workflows/github-packages-build-and-deploy.yaml
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
     with:
       ros_distro: rolling
