@@ -52,7 +52,7 @@ jobs:
       - name: Check if update is available
         id: do_check
         run: |
-          sudo apt-get update
+          apt-get update
           result=$(./scripts/is_new_version_available.py --apt-package "ros-${{ inputs.ros_distro }}-ros-core")
           echo ${result}
           echo "needs_update=${result}" >> "${GITHUB_OUTPUT}"
