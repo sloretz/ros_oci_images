@@ -49,13 +49,12 @@ jobs:
       - id: do_check
         run: |
           sudo apt-get update
-          result=$(./scripts/is_new_version_available.py \
-            --apt-package "ros-${{ inputs.ros_distro }}-ros-core")
-          echo "needs_update=$result" >> "${GITHUB_OUTPUT}"
+          result=$(./scripts/is_new_version_available.py --apt-package "ros-${{ inputs.ros_distro }}-ros-core")
+          echo "needs_update=${result}" >> "${GITHUB_OUTPUT}"
 
   call-build-and-deploy:
+    if: ${{ needs.check_for_update.outputs.needs_update }} == 'YES'
     needs: check_for_update
-    if: "${{ needs.check_for_update.outputs.needs_update }}" == "YES"
     uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
     with:
       ros_distro: ${{ inputs.ros_distro }}
