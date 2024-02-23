@@ -109,7 +109,7 @@ jobs:
 
   call-test-deployed-images:
     needs: build_and_deploy
-    uses: ./.github/workflows/test-deployed-images-one-rosdistro.yaml
+    uses: ./.github/workflows/test-deployed-images-one-ros-distro.yaml
     with:
       ros_distro: ${{ inputs.ros_distro }}
       image_registry: ${{ inputs.image_registry }}
