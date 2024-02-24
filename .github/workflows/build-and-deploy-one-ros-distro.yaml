@@ -75,9 +75,9 @@ jobs:
             --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
             --dry-run)
-            echo ${output}
-          manifests=$(echo ${output} | grep MANIFEST | awk '{print $2}' | sort | uniq | tr '\n' ' ')
-          images=$(echo ${output} | grep IMAGE | awk '{print $2}' | sort | uniq | tr '\n' ' ')
+            echo "${output}"
+          manifests=$(echo "${output}" | grep MANIFEST | awk '{print $2}' | sort | uniq | tr '\n' ' ')
+          images=$(echo "${output}" | grep IMAGE | awk '{print $2}' | sort | uniq | tr '\n' ' ')
           echo "manifests=${manifests}" >> "${GITHUB_OUTPUT}"
           echo "images=${images}" >> "${GITHUB_OUTPUT}"
 
