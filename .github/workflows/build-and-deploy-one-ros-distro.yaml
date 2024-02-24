@@ -68,7 +68,7 @@ jobs:
           registry: ${{ inputs.image_registry }}
 
       - name: Dry Run
-        id: Dry Run
+        id: dry-run
         run: |
           output=$(./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
