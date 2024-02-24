@@ -123,7 +123,7 @@ def _buildah_ros_image(
     return full_name
 
 
-def _buildah_manifest(registry, name, tag, image_names, dry_run):
+def _buildah_manifest(registry, name, tag, image_names, push, dry_run):
     full_name = _full_name(registry, name, tag)
     print("MANIFEST", full_name)
 
@@ -139,6 +139,10 @@ def _buildah_manifest(registry, name, tag, image_names, dry_run):
             print(add_cmd)
         else:
             subprocess.check_call(add_cmd)
+
+    if push:
+        # Pushing as we go reduces impact of rate limiting on github packages
+        _buildah_push_image(full_name, dry_run)
 
 
 @retry_with_backoff
@@ -274,7 +278,7 @@ def create_ros1_manifests(registry, name, ros_distro, set_of_images, dry_run):
         _buildah_manifest(registry, name, f"{ros_distro}-{suffix}", images, dry_run)
 
 
-def create_ros2_manifests(registry, name, ros_distro, set_of_images, dry_run):
+def create_ros2_manifests(registry, name, ros_distro, set_of_images, push, dry_run):
     attrs = [
         "ros_core",
         "ros_base",
@@ -286,7 +290,9 @@ def create_ros2_manifests(registry, name, ros_distro, set_of_images, dry_run):
     for attr in attrs:
         suffix = attr.replace("_", "-")
         images = _collect(attr, set_of_images)
-        _buildah_manifest(registry, name, f"{ros_distro}-{suffix}", images, dry_run)
+        _buildah_manifest(
+            registry, name, f"{ros_distro}-{suffix}", images, push, dry_run
+        )
 
 
 ROS_DISTROS = {
@@ -331,6 +337,7 @@ def main():
             "amd64",
             None,
             args.skip_if_exists,
+            args.push,
             dry_run,
         )
         arm_v7_images = build_ros1_images(
@@ -341,6 +348,7 @@ def main():
             "arm",
             "v7",
             args.skip_if_exists,
+            args.push,
             dry_run,
         )
         arm64_v8_images = build_ros1_images(
@@ -351,6 +359,7 @@ def main():
             "arm64",
             "v8",
             args.skip_if_exists,
+            args.push,
             dry_run,
         )
         create_ros1_manifests(
@@ -358,6 +367,7 @@ def main():
             args.name,
             ros_distro,
             (amd64_images, arm_v7_images, arm64_v8_images),
+            args.push,
             dry_run,
         )
     else:
@@ -369,6 +379,7 @@ def main():
             "amd64",
             None,
             args.skip_if_exists,
+            args.push,
             dry_run,
         )
         arm64_v8_images = build_ros2_images(
@@ -379,6 +390,7 @@ def main():
             "arm64",
             "v8",
             args.skip_if_exists,
+            args.push,
             dry_run,
         )
         create_ros2_manifests(
@@ -386,6 +398,7 @@ def main():
             args.name,
             ros_distro,
             (amd64_images, arm64_v8_images),
+            args.push,
             dry_run,
         )
 
