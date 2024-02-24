@@ -1,6 +1,4 @@
-# This workflow builds and pushes images to Github Packages.
-
-name: Build and Deploy to Github Packages
+name: Build and Deploy One ROS Distro
 
 on:
   workflow_dispatch:
