@@ -43,7 +43,7 @@ jobs:
   check_for_update:
     runs-on: ubuntu-latest
     container:
-      image: "${{ inputs.image_registry }}/${{ inputs.image_name }}:${{ inputs.ros_distro }}-ros-core"
+      image: "${{ inputs.image_registry }}/${{ inputs.image_name }}:${{ inputs.ros_distro }}-desktop-full"
     outputs:
       needs_update: "${{ steps.do_check.outputs.needs_update }}"
     steps:
