@@ -64,7 +64,7 @@ jobs:
         uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
         with:
           attempt_limit: 3
-          attempt_delay: 180000  # 3 minutes
+          attempt_delay: 240000  # 4 minutes
           action: redhat-actions/podman-login@9184318aae1ee5034fbfbacc0388acf12669171f  # v1
           with: |
             username: ${{ github.actor }}
@@ -97,7 +97,7 @@ jobs:
         uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
         with:
           attempt_limit: 3
-          attempt_delay: 180000  # 3 minutes
+          attempt_delay: 240000  # 4 minutes
           action: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
           with: |
             tags: "${{ steps.dry-run.outputs.images }}"
@@ -109,17 +109,12 @@ jobs:
         uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
         with:
           attempt_limit: 3
-          attempt_delay: 180000  # 3 minutes
+          attempt_delay: 240000  # 4 minutes
           action: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
           with: |
             tags: "${{ steps.dry-run.outputs.manifests }}"
             username: ${{ github.actor }}
             password: ${{ github.token }}
-
-      - name: Print URLs
-        run: |
-          echo "Pushed images ${{ fromJSON( steps.deploy-images.outputs.out ).registry-paths }}"
-          echo "Pushed manifests ${{ fromJSON( steps.deploy-manifests.outputs.out ).registry-paths }}"
 
   call-test-deployed-images:
     needs: build-and-deploy
