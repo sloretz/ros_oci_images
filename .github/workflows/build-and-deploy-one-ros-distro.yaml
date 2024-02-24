@@ -70,22 +70,18 @@ jobs:
           registry: ${{ inputs.image_registry }}
 
       - name: Dry Run
+        id: Dry Run
         run: |
-          ./scripts/build_images.py \
+          output=$(./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
             --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
-            --dry-run
-
-      - name: Get Image Names
-        id: image-names
-        run: |
-          manifests=$(./scripts/build_images.py \
-            --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "${{ inputs.image_registry }}" \
-            --name "${{ inputs.image_name }}" \
-            --dry-run | grep MANIFEST | awk '{print $2}' | sort | uniq | tr '\n' ' ')
+            --dry-run)
+            echo ${output}
+          manifests=$(echo ${output} | grep MANIFEST | awk '{print $2}' | sort | uniq | tr '\n' ' ')
+          images=$(echo ${output} | grep IMAGE | awk '{print $2}' | sort | uniq | tr '\n' ' ')
           echo "manifests=${manifests}" >> "${GITHUB_OUTPUT}"
+          echo "images=${images}" >> "${GITHUB_OUTPUT}"
 
       - name: Build Images
         run: |
@@ -94,13 +90,19 @@ jobs:
             --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}"
 
-      - name: Push to Github Packages
+      - name: Push images to Github Packages
         id: deploy
         uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
         with:
-          image: ${{ inputs.image_name }}
-          registry: ${{ inputs.image_registry }}
-          tags: ${{ steps.image-names.outputs.manifests }}
+          tags: ${{ steps.dry-run.outputs.images }}
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Push manifests to Github Packages
+        id: deploy
+        uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
+        with:
+          tags: ${{ steps.dry-run.outputs.manifests }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
