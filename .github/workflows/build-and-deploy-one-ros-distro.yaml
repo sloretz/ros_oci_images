@@ -100,7 +100,7 @@ jobs:
           attempt_delay: 180000  # 3 minutes
           action: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
           with: |
-            tags: ${{ steps.dry-run.outputs.images }}
+            tags: "${{ steps.dry-run.outputs.images }}"
             username: ${{ github.actor }}
             password: ${{ github.token }}
 
@@ -112,7 +112,7 @@ jobs:
           attempt_delay: 180000  # 3 minutes
           action: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
           with: |
-            tags: ${{ steps.dry-run.outputs.manifests }}
+            tags: "${{ steps.dry-run.outputs.manifests }}"
             username: ${{ github.actor }}
             password: ${{ github.token }}
 
