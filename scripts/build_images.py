@@ -261,7 +261,7 @@ def _collect(attr, set_of_images):
     return tuple(ret)
 
 
-def create_ros1_manifests(registry, name, ros_distro, set_of_images, dry_run):
+def create_ros1_manifests(registry, name, ros_distro, set_of_images, push, dry_run):
     attrs = [
         "ros_core",
         "ros_base",
@@ -275,7 +275,9 @@ def create_ros1_manifests(registry, name, ros_distro, set_of_images, dry_run):
     for attr in attrs:
         suffix = attr.replace("_", "-")
         images = _collect(attr, set_of_images)
-        _buildah_manifest(registry, name, f"{ros_distro}-{suffix}", images, dry_run)
+        _buildah_manifest(
+            registry, name, f"{ros_distro}-{suffix}", images, push, dry_run
+        )
 
 
 def create_ros2_manifests(registry, name, ros_distro, set_of_images, push, dry_run):
