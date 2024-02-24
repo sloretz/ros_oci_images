@@ -106,8 +106,8 @@ jobs:
 
       - name: Print URLs
         run: |
-        echo "Pushed images ${{ steps.deploy-images.outputs.registry-paths }}"
-        echo "Pushed manifests ${{ steps.deploy-manifests.outputs.registry-paths }}"
+          echo "Pushed images ${{ steps.deploy-images.outputs.registry-paths }}"
+          echo "Pushed manifests ${{ steps.deploy-manifests.outputs.registry-paths }}"
 
   call-test-deployed-images:
     needs: build-and-deploy
