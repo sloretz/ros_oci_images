@@ -49,9 +49,7 @@ def retry_with_backoff(func):
             try:
                 return func(*args, **kwargs)
             except subprocess.CalledProcessError:
-                print(
-                    "Hmm container failed to build, retrying in case it's network related"
-                )
+                print("Hmm command failed, retrying in case it's network related")
                 time.sleep(i * i * 15)
         raise RuntimeError("Unable to build image")
 
@@ -75,6 +73,7 @@ def _buildah_ros_image(
     arch,
     variant,
     skip_if_exists,
+    push,
     dry_run,
 ):
     # Given a path like "ros1/ros-core"
@@ -117,6 +116,10 @@ def _buildah_ros_image(
     else:
         subprocess.check_call(cmd, cwd=path)
 
+    if push:
+        # Pushing as we go reduces impact of rate limiting on github packages
+        _buildah_push_image(full_name, dry_run)
+
     return full_name
 
 
@@ -138,6 +141,15 @@ def _buildah_manifest(registry, name, tag, image_names, dry_run):
             subprocess.check_call(add_cmd)
 
 
+@retry_with_backoff
+def _buildah_push_image(image_name, dry_run):
+    cmd = ["buildah", "push", image_name]
+    if dry_run:
+        print(cmd)
+    else:
+        subprocess.check_call(cmd)
+
+
 class Ros2Images:
     def __init__(self):
         self.ros_core = None
@@ -149,7 +161,7 @@ class Ros2Images:
 
 
 def build_ros2_images(
-    ros_distro, base_image, registry, name, arch, variant, skip_if_exists, dry_run
+    ros_distro, base_image, registry, name, arch, variant, skip_if_exists, push, dry_run
 ):
     """Build ROS 2 images for one specific architecture."""
 
@@ -160,6 +172,7 @@ def build_ros2_images(
         "arch": arch,
         "variant": variant,
         "skip_if_exists": skip_if_exists,
+        "push": push,
         "dry_run": dry_run,
     }
 
@@ -196,7 +209,7 @@ class Ros1Images:
 
 
 def build_ros1_images(
-    ros_distro, base_image, registry, name, arch, variant, skip_if_exists, dry_run
+    ros_distro, base_image, registry, name, arch, variant, skip_if_exists, push, dry_run
 ):
     """Build ROS 1 images for one specific architecture."""
 
@@ -207,6 +220,7 @@ def build_ros1_images(
         "arch": arch,
         "variant": variant,
         "skip_if_exists": skip_if_exists,
+        "push": push,
         "dry_run": dry_run,
     }
 
@@ -288,6 +302,7 @@ def parse_arguments():
     parser.add_argument("--registry", default="localhost", type=str)
     parser.add_argument("--name", default="ros", type=str)
     parser.add_argument("--rosdistro", required=True, type=str)
+    parser.add_argument("--push", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
 

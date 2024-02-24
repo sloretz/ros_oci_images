@@ -78,6 +78,7 @@ jobs:
             --rosdistro "${{ inputs.ros_distro }}" \
             --registry "${{ inputs.image_registry }}" \
             --name "${{ inputs.image_name }}" \
+            --push \
             --dry-run)
             echo "${output}"
           manifests=$(echo "${output}" | grep MANIFEST | awk '{print $2}' | sort | uniq | tr '\n' ' ')
@@ -85,36 +86,13 @@ jobs:
           echo "manifests=${manifests}" >> "${GITHUB_OUTPUT}"
           echo "images=${images}" >> "${GITHUB_OUTPUT}"
 
-      - name: Build Images
+      - name: Build and Push Images
         run: |
           ./scripts/build_images.py \
             --rosdistro "${{ inputs.ros_distro }}" \
             --registry "${{ inputs.image_registry }}" \
-            --name "${{ inputs.image_name }}"
-
-      - name: Push images to Github Packages
-        id: deploy-images
-        uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
-        with:
-          attempt_limit: 3
-          attempt_delay: 240000  # 4 minutes
-          action: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
-          with: |
-            tags: "${{ steps.dry-run.outputs.images }}"
-            username: ${{ github.actor }}
-            password: ${{ github.token }}
-
-      - name: Push manifests to Github Packages
-        id: deploy-manifests
-        uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
-        with:
-          attempt_limit: 3
-          attempt_delay: 240000  # 4 minutes
-          action: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
-          with: |
-            tags: "${{ steps.dry-run.outputs.manifests }}"
-            username: ${{ github.actor }}
-            password: ${{ github.token }}
+            --name "${{ inputs.image_name }}" \
+            --push
 
   call-test-deployed-images:
     needs: build-and-deploy
