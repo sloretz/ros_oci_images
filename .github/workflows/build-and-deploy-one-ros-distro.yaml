@@ -89,7 +89,7 @@ jobs:
             --name "${{ inputs.image_name }}"
 
       - name: Push images to Github Packages
-        id: deploy
+        id: deploy-images
         uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
         with:
           tags: ${{ steps.dry-run.outputs.images }}
@@ -97,15 +97,17 @@ jobs:
           password: ${{ github.token }}
 
       - name: Push manifests to Github Packages
-        id: deploy
+        id: deploy-manifests
         uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df  # v2.7.1
         with:
           tags: ${{ steps.dry-run.outputs.manifests }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Print Image URL
-        run: echo "Pushed image to ${{ steps.deploy.outputs.registry-paths }}"
+      - name: Print URLs
+        run: |
+        echo "Pushed images ${{ steps.deploy-images.outputs.registry-paths }}"
+        echo "Pushed manifests ${{ steps.deploy-manifests.outputs.registry-paths }}"
 
   call-test-deployed-images:
     needs: build-and-deploy
