@@ -61,11 +61,15 @@ jobs:
         run: ./scripts/install_dependencies.bash
 
       - name: Log in to ghcr.io
-        uses: redhat-actions/podman-login@9184318aae1ee5034fbfbacc0388acf12669171f  # v1
+        uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
         with:
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
-          registry: ${{ inputs.image_registry }}
+          attempt_limit: 3
+          attempt_delay: 180000  # 3 minutes
+          action: redhat-actions/podman-login@9184318aae1ee5034fbfbacc0388acf12669171f  # v1
+          with: |
+            username: ${{ github.actor }}
+            password: ${{ github.token }}
+            registry: ${{ inputs.image_registry }}
 
       - name: Dry Run
         id: dry-run
