@@ -142,12 +142,21 @@ def _buildah_manifest(registry, name, tag, image_names, push, dry_run):
 
     if push:
         # Pushing as we go reduces impact of rate limiting on github packages
-        _buildah_push_image(full_name, dry_run)
+        _buildah_push_manifest(full_name, dry_run)
 
 
 @retry_with_backoff
 def _buildah_push_image(image_name, dry_run):
     cmd = ["buildah", "push", image_name]
+    if dry_run:
+        print(cmd)
+    else:
+        subprocess.check_call(cmd)
+
+
+@retry_with_backoff
+def _buildah_push_manifest(image_name, dry_run):
+    cmd = ["buildah", "manifest", "push", image_name]
     if dry_run:
         print(cmd)
     else:
