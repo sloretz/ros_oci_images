@@ -120,6 +120,18 @@ toolbox enter rolling-desktop
 ros2 --help
 ```
 
+[x11docker](https://github.com/mviereck/x11docker) (Requires Podman or Docker installed)
+
+```bash
+# Option 1: using podman
+podman pull ghcr.io/sloretz/ros:rolling-desktop
+# Option 2: using docker
+docker pull ghcr.io/sloretz/ros:rolling-desktop
+
+# After pulling, run this to use RViz with gpu acceleration
+x11docker --gpu ghcr.io/sloretz/ros:rolling-desktop rviz2
+```
+
 ## Comparison to osrf/docker_images
 
 This repo is a spiritual fork of [the official OSRF docker images](https://github.com/osrf/docker_images).
