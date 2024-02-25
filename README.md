@@ -120,7 +120,7 @@ toolbox enter rolling-desktop
 ros2 --help
 ```
 
-[x11docker](https://github.com/mviereck/x11docker) (Requires Podman or Docker installed)
+[x11docker](https://github.com/mviereck/x11docker) (Requires Podman, Docker, or nerdctl to be installed)
 
 ```bash
 # Option 1: using podman
