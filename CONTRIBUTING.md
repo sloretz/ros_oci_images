@@ -118,6 +118,8 @@ scripts/
 
 The file `build_images.py` invokes buildah to create all images for one ROS distro.
 Inside it is hardcoded knowledge of what architectures are supported by each ROS distro.
+It also has the option to push images to github packages.
+When pushing images, each image is built and then pushed one at a time to avoid rate limiting on pushing images.
 Run `./scripts/build_images.py --help` to see what options it takes.
 
 The file `test_images.py` invokes podman to run commands in all images for one ROS distro.
