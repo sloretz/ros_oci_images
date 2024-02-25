@@ -127,6 +127,8 @@ ros2 --help
 podman pull ghcr.io/sloretz/ros:rolling-desktop
 # Option 2: using docker
 docker pull ghcr.io/sloretz/ros:rolling-desktop
+# Option 3: using nerdctl
+nerdctl pull ghcr.io/sloretz/ros:rolling-desktop
 
 # After pulling, run this to use RViz with gpu acceleration
 x11docker --gpu ghcr.io/sloretz/ros:rolling-desktop rviz2
