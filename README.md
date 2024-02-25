@@ -64,7 +64,6 @@ All images are based on Ubuntu.
 
 Used containers for a while?
 Other tools might be better fit your use case.
-I personally use [Podman](https://podman.io/) most of the time.
 
 [Apptainer](https://apptainer.org/)
 
