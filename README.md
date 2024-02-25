@@ -80,6 +80,12 @@ distrobox enter rolling-desktop
 ros2 --help
 ```
 
+[nerdctl](https://github.com/containerd/nerdctl) using [rootless mode](https://github.com/containerd/nerdctl?tab=readme-ov-file#rootless-mode).
+
+```
+nerdctl run --rm=true -ti ghcr.io/sloretz/ros:rolling-desktop ros2 --help
+```
+
 [Podman](https://podman.io/)
 
 ```
