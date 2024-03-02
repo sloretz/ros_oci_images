@@ -47,52 +47,51 @@ There is a script to install the build dependencies: `./scripts/install_dependen
 
 Understanding where everything is will help you make a contribution.
 
-At a high level, this repository uses [Python](https://www.python.org/about/gettingstarted/) scripts to invoke [buildah](https://buildah.io/) to build images from [Containerfiles](https://github.com/containers/common/blob/main/docs/Containerfile.5.md).
+At a high level, this repository uses [Python](https://www.python.org/about/gettingstarted/) scripts to invoke [buildah](https://buildah.io/) to build images from Dockerfiles.
 The python script is called using [Github Actions](https://github.com/features/actions) to build images for each active [ROS distro](http://docs.ros.org/en/rolling/Releases.html).
 The images are pushed to [Github Packages](https://github.com/features/packages).
 Afterwards anyone can pull the image they need and run it.
 
 #### What's in the ros1 and ros2 folders
 
-The `ros1` and `ros2` folders hold [Containerfile](https://github.com/containers/common/blob/main/docs/Containerfile.5.md) definitions for ROS 1 and ROS 2 respectively.
-A `Containerfile`'s syntax is identical to a `Dockerfile`'s syntax.
+The `ros1` and `ros2` folders hold Dockerfile definitions for ROS 1 and ROS 2 respectively.
 
 ```
 ros1
 ├── desktop
-│   └── Containerfile
+│   └── Dockerfile
 ├── desktop-full
-│   └── Containerfile
+│   └── Dockerfile
 ├── perception
-│   └── Containerfile
+│   └── Dockerfile
 ├── robot
-│   └── Containerfile
+│   └── Dockerfile
 ├── ros-base
-│   └── Containerfile
+│   └── Dockerfile
 ├── ros-core
-│   ├── Containerfile
+│   ├── Dockerfile
 │   └── ros_entrypoint.sh
 ├── simulators
-│   └── Containerfile
+│   └── Dockerfile
 └── viz
-    └── Containerfile
+    └── Dockerfile
 ```
 
 ```
 ros2
 ├── desktop
-│   └── Containerfile
+│   └── Dockerfile
 ├── desktop-full
-│   └── Containerfile
+│   └── Dockerfile
 ├── perception
-│   └── Containerfile
+│   └── Dockerfile
 ├── ros-base
-│   └── Containerfile
+│   └── Dockerfile
 ├── ros-core
-│   ├── Containerfile
+│   ├── Dockerfile
 │   └── ros_entrypoint.sh
 └── simulation
-    └── Containerfile
+    └── Dockerfile
 ```
 
 Originally the files in `ros1` were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/noetic/ubuntu/focal), and the ROS 2 definitions  were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/rolling/ubuntu/jammy).
