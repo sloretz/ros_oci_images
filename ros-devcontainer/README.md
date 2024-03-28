@@ -62,7 +62,7 @@ Open a Visual Studio Code instance inside of the `ros2` folder.
 code .
 ```
 
-Open the dev container by hitting `CTRL` + `SHIFT` + `P` and start typing until you can click on the command `Dev Containers: Rebuild Without Cache and Reopen in Container`.
+Open the dev container by hitting `CTRL` + `SHIFT` + `P` and start typing until you can click on the command `Dev Containers: Reopen in Container`.
 Run that command!
 
 Congratulations you've started the dev container! Usually this is where you'll start working on your code, but follow the next couple steps for first-time setup.
@@ -140,7 +140,7 @@ Open a Visual Studio Code instance inside of the `ros2` folder.
 code .
 ```
 
-Open the dev container by hitting `CTRL` + `SHIFT` + `P` and start typing until you can click on the command `Dev Containers: Rebuild Without Cache and Reopen in Container`.
+Open the dev container by hitting `CTRL` + `SHIFT` + `P` and start typing until you can click on the command `Dev Containers: Reopen in Container`.
 Run that command!
 
 Congratulations you've started the dev container!

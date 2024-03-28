@@ -48,6 +48,13 @@ ENV LC_ALL C.UTF-8
 
 # Install ROS Developer tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-pytest-cov \
+    python3-flake8-blind-except \
+    python3-flake8-class-newline \
+    python3-flake8-deprecated \
+    python3-pytest-repeat \
+    python3-pytest-rerunfailures \
     ros-dev-tools \
     python3-colcon-mixin \
     && rm -rf /var/lib/apt/lists/*
