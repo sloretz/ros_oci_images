@@ -110,10 +110,14 @@ The `scripts` folder holds Python and Bash scripts used for building and testing
 
 ```
 scripts/
+├── common.py
 ├── build_images.py
 ├── install_dependencies.bash
 └── test_images.py
 ```
+
+The file `common.py` has some common utilities that can be imported by adjacent scripts.
+The propper way to do this would be to create a python package where the other scripts become entrypoints, but I'm too lazy to do that.
 
 The file `build_images.py` invokes buildah to create all images for one ROS distro.
 Inside it is hardcoded knowledge of what architectures are supported by each ROS distro.
