@@ -23,10 +23,9 @@ import sys
 import time
 
 _SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
-
-
-def _full_name(registry, name, tag):
-    return f"{registry}/{name}:{tag}"
+# I'm too lazy to make a real python package
+sys.path.append(_SCRIPT_DIR)
+import common
 
 
 def _path(rel):
@@ -43,26 +42,13 @@ def _tag(ros_distro, pkg, arch, variant):
     return tag
 
 
-def retry_with_backoff(func):
-    def new_func(*args, **kwargs):
-        for i in range(5):
-            try:
-                return func(*args, **kwargs)
-            except subprocess.CalledProcessError:
-                print("Hmm command failed, retrying in case it's network related")
-                time.sleep(i * i * 15)
-        raise RuntimeError("Unable to build image")
-
-    return new_func
-
-
 def _image_exists(full_name):
     cmd = ["buildah", "inspect", full_name]
     ret = subprocess.call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return 0 == ret
 
 
-@retry_with_backoff
+@common.retry_with_backoff
 def _buildah_ros_image(
     base_image,
     repo_path,
@@ -87,7 +73,7 @@ def _buildah_ros_image(
     tag = _tag(ros_distro, pkg, arch, variant)
 
     # Make a name like ghcr.io/sloretz/ros:noetic-ros-core-arm64-v8
-    full_name = _full_name(registry, name, tag)
+    full_name = common._full_name(registry, name, tag)
 
     if skip_if_exists and _image_exists(full_name):
         return full_name
@@ -118,49 +104,9 @@ def _buildah_ros_image(
 
     if push:
         # Pushing as we go reduces impact of rate limiting on github packages
-        _buildah_push_image(full_name, dry_run)
+        common._buildah_push_image(full_name, dry_run)
 
     return full_name
-
-
-def _buildah_manifest(registry, name, tag, image_names, push, dry_run):
-    full_name = _full_name(registry, name, tag)
-    print("MANIFEST", full_name)
-
-    create_cmd = ["buildah", "manifest", "create", full_name]
-    if dry_run:
-        print(create_cmd)
-    else:
-        subprocess.check_call(create_cmd)
-
-    for image in image_names:
-        add_cmd = ["buildah", "manifest", "add", full_name, image]
-        if dry_run:
-            print(add_cmd)
-        else:
-            subprocess.check_call(add_cmd)
-
-    if push:
-        # Pushing as we go reduces impact of rate limiting on github packages
-        _buildah_push_manifest(full_name, dry_run)
-
-
-@retry_with_backoff
-def _buildah_push_image(image_name, dry_run):
-    cmd = ["buildah", "push", image_name]
-    if dry_run:
-        print(cmd)
-    else:
-        subprocess.check_call(cmd)
-
-
-@retry_with_backoff
-def _buildah_push_manifest(image_name, dry_run):
-    cmd = ["buildah", "manifest", "push", image_name]
-    if dry_run:
-        print(cmd)
-    else:
-        subprocess.check_call(cmd)
 
 
 class Ros2Images:
@@ -284,7 +230,7 @@ def create_ros1_manifests(registry, name, ros_distro, set_of_images, push, dry_r
     for attr in attrs:
         suffix = attr.replace("_", "-")
         images = _collect(attr, set_of_images)
-        _buildah_manifest(
+        common._buildah_manifest(
             registry, name, f"{ros_distro}-{suffix}", images, push, dry_run
         )
 
@@ -301,7 +247,7 @@ def create_ros2_manifests(registry, name, ros_distro, set_of_images, push, dry_r
     for attr in attrs:
         suffix = attr.replace("_", "-")
         images = _collect(attr, set_of_images)
-        _buildah_manifest(
+        common._buildah_manifest(
             registry, name, f"{ros_distro}-{suffix}", images, push, dry_run
         )
 
