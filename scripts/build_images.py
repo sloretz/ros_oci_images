@@ -42,12 +42,6 @@ def _tag(ros_distro, pkg, arch, variant):
     return tag
 
 
-def _image_exists(full_name):
-    cmd = ["buildah", "inspect", full_name]
-    ret = subprocess.call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    return 0 == ret
-
-
 @common.retry_with_backoff
 def _buildah_ros_image(
     base_image,
@@ -75,7 +69,7 @@ def _buildah_ros_image(
     # Make a name like ghcr.io/sloretz/ros:noetic-ros-core-arm64-v8
     full_name = common._full_name(registry, name, tag)
 
-    if skip_if_exists and _image_exists(full_name):
+    if skip_if_exists and common._image_exists(full_name):
         return full_name
 
     print("IMAGE", full_name)

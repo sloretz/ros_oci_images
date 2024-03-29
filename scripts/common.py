@@ -57,3 +57,9 @@ def _buildah_push_manifest(image_name, dry_run):
         print(cmd)
     else:
         subprocess.check_call(cmd)
+
+
+def _image_exists(full_name):
+    cmd = ["buildah", "inspect", full_name]
+    ret = subprocess.call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return 0 == ret
