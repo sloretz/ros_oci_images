@@ -62,6 +62,7 @@ def get_base_image(linux_distro, linux_code_name):
             return ubuntu_base_images[linux_code_name.lower()]
     raise RuntimeError(f"Unknown linux distro {linux_distro} {linux_code_name}")
 
+
 @common.retry_with_backoff
 def build_dev_container(
     os, codename, registry, name, arch, variant, skip_if_exists, push, dry_run
