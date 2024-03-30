@@ -1,6 +1,7 @@
 name: Build and Push dev container images
 
 on:
+  pull_request:
   workflow_dispatch:
       image_registry:
         description: The container registry to push to (must be ghcr.io)
