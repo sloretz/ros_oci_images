@@ -27,7 +27,7 @@ import common
 
 
 SUPPORTED_OSES = {
-    "ubuntu": ("jammy", "noble"),
+    "ubuntu": ("jammy", ),
 }
 
 
