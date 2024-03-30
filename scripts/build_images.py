@@ -377,8 +377,8 @@ def main():
                 dry_run,
             )
         else:
-            arm_v7_images = []
-            arm64_v8_images = []
+            arm_v7_images = Ros1Images()
+            arm64_v8_images = Ros1Images()
         create_ros1_manifests(
             args.registry,
             args.name,
@@ -412,7 +412,7 @@ def main():
                 dry_run,
             )
         else:
-            arm64_v8_images = []
+            arm64_v8_images = Ros2Images()
         create_ros2_manifests(
             args.registry,
             args.name,
