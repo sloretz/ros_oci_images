@@ -81,10 +81,6 @@ jobs:
             --push \
             --dry-run)
             echo "${output}"
-          manifests=$(echo "${output}" | grep MANIFEST | awk '{print $2}' | sort | uniq | tr '\n' ' ')
-          images=$(echo "${output}" | grep IMAGE | awk '{print $2}' | sort | uniq | tr '\n' ' ')
-          echo "manifests=${manifests}" >> "${GITHUB_OUTPUT}"
-          echo "images=${images}" >> "${GITHUB_OUTPUT}"
 
       - name: Build and Push Images
         run: |
