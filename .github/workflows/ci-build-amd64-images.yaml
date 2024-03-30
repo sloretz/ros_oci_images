@@ -1,0 +1,23 @@
+name: CI Build AMD64 Images
+
+on:
+  pull_request
+
+jobs:
+
+  call-ci-build-noetic:
+    uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
+    with:
+      ros_distro: noetic
+  call-ci-build-humble:
+    uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
+    with:
+      ros_distro: humble
+  call-ci-build-iron:
+    uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
+    with:
+      ros_distro: iron
+  call-ci-build-rolling:
+    uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
+    with:
+      ros_distro: rolling
