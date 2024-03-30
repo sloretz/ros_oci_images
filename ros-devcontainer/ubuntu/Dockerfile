@@ -68,6 +68,9 @@ ARG USERNAME=ros-developer
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
+# Delete ubuntu user if it exists (Ubuntu Noble)
+RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
+
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME  -s `which bash` \
     && apt-get update \
