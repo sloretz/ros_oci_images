@@ -199,12 +199,14 @@ def build_ros2_images(
         images.ros_base, "ros2/perception", **common_args
     )
     images.desktop = _buildah_ros_image(images.ros_base, "ros2/desktop", **common_args)
-    images.desktop_full = _buildah_ros_image(
-        images.desktop, "ros2/desktop-full", **common_args
-    )
-    images.simulation = _buildah_ros_image(
-        images.ros_base, "ros2/simulation", **common_args
-    )
+    if "rolling" != ros_distro:
+        # TODO(https://github.com/sloretz/ros_oci_images/issues/2)
+        images.desktop_full = _buildah_ros_image(
+            images.desktop, "ros2/desktop-full", **common_args
+        )
+        images.simulation = _buildah_ros_image(
+            images.ros_base, "ros2/simulation", **common_args
+        )
 
     return images
 
@@ -310,7 +312,7 @@ ROS_DISTROS = {
     "noetic": "ubuntu:focal",
     "humble": "ubuntu:jammy",
     "iron": "ubuntu:jammy",
-    "rolling": "ubuntu:jammy",
+    "rolling": "ubuntu:noble",
 }
 
 

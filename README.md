@@ -47,8 +47,8 @@ All images are based on Ubuntu.
 | ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-ros-base`     |
 | desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-desktop`      |
 | perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-perception`   |
-| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-simulation`   |
-| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-desktop-full` |
+| simulation      | ❌⚠️    | ❌      | ❌⚠️       | `ghcr.io/sloretz/ros:rolling-simulation`   |
+| desktop-full    | ❌⚠️    | ❌      | ❌⚠️       | `ghcr.io/sloretz/ros:rolling-desktop-full` |
 | [ROS Noetic](https://wiki.ros.org/noetic)                                                   |
 | ros-core        | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-ros-core`      |
 | ros-base        | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-ros-base`      |
@@ -59,6 +59,8 @@ All images are based on Ubuntu.
 | robot           | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-robot`         |
 | viz             | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-viz`           |
 
+
+❌⚠️ [ROS Rolling desktop-full and simulation images are not available for Ubuntu Noble](https://github.com/sloretz/ros_oci_images/issues/2), but are expected to be available in the future.
 
 ## Using with other OCI compatible tools
 
