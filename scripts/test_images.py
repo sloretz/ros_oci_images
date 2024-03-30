@@ -118,6 +118,9 @@ def main():
             ("arm64", "v8"),
         ]
         for s in suffixes:
+            if "rolling" == ros_distro and s in ["desktop-full", "simulation"]:
+                # TODO(https://github.com/sloretz/ros_oci_images/issues/2)
+                continue
             tag = f"{ros_distro}-{s}"
             package = f"ros-{ros_distro}-{s}"
             full_name = _full_name(args.registry, args.name, tag)
