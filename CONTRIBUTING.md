@@ -138,6 +138,8 @@ These are used to build and test the images.
 ├── build-and-deploy-all.yaml
 ├── build-and-deploy-one-ros-distro-if-necessary.yaml
 ├── build-and-deploy-one-ros-distro.yaml
+├── ci-build-amd64-image-one-ros-distro.yaml
+├── ci-build-amd64-images.yaml
 ├── python-lint.yaml
 └── test-deployed-images-one-ros-distro.yaml
 ```
@@ -153,3 +155,5 @@ The workflow `build-and-deploy-all-yaml` runs once per week and rebuilds all of 
 The workflow `build-and-deploy-all-if-necessary.yaml` runs every 6 hours and calls `build-and-deploy-one-ros-distro-if-necessary.yaml` for every supported ROS distro.
 
 The workflow `python-lint.yaml` runs the [black Python linter](https://github.com/psf/black).
+
+The workflow `ci-build-amd64-image-one-ros-distro.yaml` builds the amd64 architecture images for one ROS distro, and the workflow `ci-build-amd64-images.yaml` calls it for every supported ROS distro.

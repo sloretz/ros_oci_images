@@ -322,6 +322,7 @@ def parse_arguments():
     parser.add_argument("--push", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
+    parser.add_argument("--one-arch", action="store_true")
 
     args = parser.parse_args()
 
@@ -338,6 +339,7 @@ def main():
     ros_distro = args.rosdistro.lower()
     base_image = ROS_DISTROS[ros_distro]
     dry_run = args.dry_run
+    amd64_only = args.one_arch
 
     if "noetic" == ros_distro:
         amd64_images = build_ros1_images(
@@ -351,28 +353,32 @@ def main():
             args.push,
             dry_run,
         )
-        arm_v7_images = build_ros1_images(
-            ros_distro,
-            base_image,
-            args.registry,
-            args.name,
-            "arm",
-            "v7",
-            args.skip_if_exists,
-            args.push,
-            dry_run,
-        )
-        arm64_v8_images = build_ros1_images(
-            ros_distro,
-            base_image,
-            args.registry,
-            args.name,
-            "arm64",
-            "v8",
-            args.skip_if_exists,
-            args.push,
-            dry_run,
-        )
+        if not amd64_only:
+            arm_v7_images = build_ros1_images(
+                ros_distro,
+                base_image,
+                args.registry,
+                args.name,
+                "arm",
+                "v7",
+                args.skip_if_exists,
+                args.push,
+                dry_run,
+            )
+            arm64_v8_images = build_ros1_images(
+                ros_distro,
+                base_image,
+                args.registry,
+                args.name,
+                "arm64",
+                "v8",
+                args.skip_if_exists,
+                args.push,
+                dry_run,
+            )
+        else:
+            arm_v7_images = Ros1Images()
+            arm64_v8_images = Ros1Images()
         create_ros1_manifests(
             args.registry,
             args.name,
@@ -393,17 +399,20 @@ def main():
             args.push,
             dry_run,
         )
-        arm64_v8_images = build_ros2_images(
-            ros_distro,
-            base_image,
-            args.registry,
-            args.name,
-            "arm64",
-            "v8",
-            args.skip_if_exists,
-            args.push,
-            dry_run,
-        )
+        if not amd64_only:
+            arm64_v8_images = build_ros2_images(
+                ros_distro,
+                base_image,
+                args.registry,
+                args.name,
+                "arm64",
+                "v8",
+                args.skip_if_exists,
+                args.push,
+                dry_run,
+            )
+        else:
+            arm64_v8_images = Ros2Images()
         create_ros2_manifests(
             args.registry,
             args.name,

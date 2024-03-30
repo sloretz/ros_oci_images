@@ -1,0 +1,40 @@
+name: CI Build AMD64 Images For One ROS Distro
+
+on:
+  workflow_call:
+    inputs:
+      ros_distro:
+        description: ROS Distro to build
+        type: string
+        required: true
+
+jobs:
+
+  ci-build-amd64-image:
+    name: CI Build AMD64 Images For One ROS Distro
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+      - name: Install dependencies
+        run: ./scripts/install_dependencies.bash
+
+      - name: Dry Run
+        id: dry-run
+        run: |
+          output=$(./scripts/build_images.py \
+            --rosdistro "${{ inputs.ros_distro }}" \
+            --registry "localhost" \
+            --name "ros-ci" \
+            --one-arch \
+            --dry-run)
+            echo "${output}"
+
+      - name: Build and Push Images
+        run: |
+          ./scripts/build_images.py \
+            --rosdistro "${{ inputs.ros_distro }}" \
+            --registry "localhost" \
+            --name "ros-ci" \
+            --one-arch
