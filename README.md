@@ -42,13 +42,13 @@ All images are based on Ubuntu.
 | perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-perception`      |
 | simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-simulation`      |
 | desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-desktop-full`    |
-| [ROS Rolling](http://docs.ros.org/en/rolling)                                               |
-| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-ros-core`     |
-| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-ros-base`     |
-| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-desktop`      |
-| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-perception`   |
-| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-simulation`   |
-| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-desktop-full` |
+| [ROS Rolling](http://docs.ros.org/en/rolling)⚠️                                               |
+| ros-core        | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-ros-core`     |
+| ros-base        | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-ros-base`     |
+| desktop         | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-desktop`      |
+| perception      | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-perception`   |
+| simulation      | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-simulation`   |
+| desktop-full    | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-desktop-full` |
 | [ROS Noetic](https://wiki.ros.org/noetic)                                                   |
 | ros-core        | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-ros-core`      |
 | ros-base        | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-ros-base`      |
@@ -59,6 +59,8 @@ All images are based on Ubuntu.
 | robot           | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-robot`         |
 | viz             | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-viz`           |
 
+
+⚠️ ROS Rolling images are still on Ubuntu Jammy because some packages [are not yet available](https://github.com/sloretz/ros_oci_images/issues/2)
 
 ## Using with other OCI compatible tools
 
