@@ -301,7 +301,7 @@ def create_ros2_manifests(registry, name, ros_distro, set_of_images, push, dry_r
         "desktop_full",
     ]
     for attr in attrs:
-        if "rolling" != ros_distro and attr in ["desktop_full", "simulation"]:
+        if "rolling" == ros_distro and attr in ["desktop_full", "simulation"]:
             # TODO(https://github.com/sloretz/ros_oci_images/issues/2)
             continue
         suffix = attr.replace("_", "-")
