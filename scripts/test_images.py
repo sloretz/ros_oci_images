@@ -83,6 +83,7 @@ def main():
             "desktop",
             "perception",
             "simulators",
+            "simulators-osrf",
             "desktop-full",
             "robot",
             "viz",
@@ -98,7 +99,7 @@ def main():
             full_name = _full_name(args.registry, args.name, tag)
             for arch, variant in architectures:
                 if arch == "arm" and variant == "v7":
-                    if s in ("simulators", "desktop-full"):
+                    if s in ("simulators", "simulators-osrf", "desktop-full"):
                         # Skip since these metapackages aren't available in arm v7
                         continue
                 _buildah_pull(full_name, dry_run)

@@ -216,6 +216,7 @@ class Ros1Images:
         self.robot = None
         self.perception = None
         self.simulators = None
+        self.simulators_osrf = None
         self.viz = None
         self.desktop = None
         self.desktop_full = None
@@ -257,6 +258,9 @@ def build_ros1_images(
         images.simulators = _buildah_ros_image(
             images.robot, "ros1/simulators", **common_args
         )
+        images.simulators_osrf = _buildah_ros_image(
+            images.simulators, "ros1/simulators-osrf", **common_args
+        )
 
     return images
 
@@ -277,6 +281,7 @@ def create_ros1_manifests(registry, name, ros_distro, set_of_images, push, dry_r
         "robot",
         "perception",
         "simulators",
+        "simulators_osrf",
         "viz",
         "desktop",
         "desktop_full",
