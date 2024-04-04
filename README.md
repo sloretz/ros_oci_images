@@ -55,12 +55,15 @@ All images are based on Ubuntu.
 | desktop         | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-desktop`       |
 | perception      | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-perception`    |
 | simulators      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-simulators`    |
+| simulators-osrf | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-simulators-osrf`|
 | desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-desktop-full`  |
 | robot           | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-robot`         |
 | viz             | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-viz`           |
 
 
 ⚠️ ROS Rolling images are still on Ubuntu Jammy because some packages [are not yet available](https://github.com/sloretz/ros_oci_images/issues/2)
+
+simulators-osrf image contains the same packages as simulators, but updated to versions provided by packages.osrfoundation.org (PPA suggested by Gazebo).
 
 ## Using with other OCI compatible tools
 

@@ -83,6 +83,7 @@ def main():
             "desktop",
             "perception",
             "simulators",
+            "simulators-osrf",
             "desktop-full",
             "robot",
             "viz",
@@ -93,6 +94,7 @@ def main():
             ("arm64", "v8"),
         ]
         for s in suffixes:
+            s = "simulators" if s == "simulators-osrf" else s
             tag = f"{ros_distro}-{s}"
             package = f"ros-{ros_distro}-{s}"
             full_name = _full_name(args.registry, args.name, tag)
