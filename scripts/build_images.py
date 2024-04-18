@@ -205,7 +205,27 @@ def build_ros2_images(
     images.simulation = _buildah_ros_image(
         images.ros_base, "ros2/simulation", **common_args
     )
+    return images
 
+
+def build_ros2_testing_images(
+    ros_distro, base_image, registry, name, arch, variant, skip_if_exists, push, dry_run
+):
+    """Build ROS 2 images for one specific architecture."""
+
+    common_args = {
+        "ros_distro": ros_distro,
+        "registry": registry,
+        "name": name,
+        "arch": arch,
+        "variant": variant,
+        "skip_if_exists": skip_if_exists,
+        "push": push,
+        "dry_run": dry_run,
+    }
+
+    images = Ros2Images()
+    images.desktop = _buildah_ros_image(base_image, "ros-testing/desktop", **common_args)
     return images
 
 
@@ -311,6 +331,18 @@ def create_ros2_manifests(registry, name, ros_distro, set_of_images, push, dry_r
         )
 
 
+def create_ros2_testing_manifests(registry, name, ros_distro, set_of_images, push, dry_run):
+    attrs = [
+        "desktop",
+    ]
+    for attr in attrs:
+        suffix = attr.replace("_", "-")
+        images = _collect(attr, set_of_images)
+        _buildah_manifest(
+            registry, name, f"{ros_distro}-{suffix}", images, push, dry_run
+        )
+
+
 ROS_DISTROS = {
     "noetic": "ubuntu:focal",
     "humble": "ubuntu:jammy",
@@ -328,6 +360,7 @@ def parse_arguments():
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
     parser.add_argument("--one-arch", action="store_true")
+    parser.add_argument("--ros2-testing", action="store_true")
 
     args = parser.parse_args()
 
@@ -346,7 +379,42 @@ def main():
     dry_run = args.dry_run
     amd64_only = args.one_arch
 
-    if "noetic" == ros_distro:
+    if args.ros2_testing:
+        base_image = _full_name(args.registry, "ros", _tag(ros_distro, "desktop", None, None))
+        amd64_images = build_ros2_testing_images(
+            ros_distro,
+            base_image,
+            args.registry,
+            args.name,
+            "amd64",
+            None,
+            args.skip_if_exists,
+            args.push,
+            dry_run,
+        )
+        if not amd64_only:
+            arm64_v8_images = build_ros2_testing_images(
+                ros_distro,
+                base_image,
+                args.registry,
+                args.name,
+                "arm64",
+                "v8",
+                args.skip_if_exists,
+                args.push,
+                dry_run,
+            )
+        else:
+            arm64_v8_images = Ros2Images()
+        create_ros2_testing_manifests(
+            args.registry,
+            args.name,
+            ros_distro,
+            (amd64_images, arm64_v8_images),
+            args.push,
+            dry_run,
+        )
+    elif "noetic" == ros_distro:
         amd64_images = build_ros1_images(
             ros_distro,
             base_image,
