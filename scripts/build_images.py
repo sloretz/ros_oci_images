@@ -225,7 +225,9 @@ def build_ros2_testing_images(
     }
 
     images = Ros2Images()
-    images.desktop = _buildah_ros_image(base_image, "ros-testing/desktop", **common_args)
+    images.desktop = _buildah_ros_image(
+        base_image, "ros-testing/desktop", **common_args
+    )
     return images
 
 
@@ -331,7 +333,9 @@ def create_ros2_manifests(registry, name, ros_distro, set_of_images, push, dry_r
         )
 
 
-def create_ros2_testing_manifests(registry, name, ros_distro, set_of_images, push, dry_run):
+def create_ros2_testing_manifests(
+    registry, name, ros_distro, set_of_images, push, dry_run
+):
     attrs = [
         "desktop",
     ]
@@ -348,6 +352,7 @@ ROS_DISTROS = {
     "humble": "ubuntu:jammy",
     "iron": "ubuntu:jammy",
     "rolling": "ubuntu:jammy",
+    "jazzy": "ubuntu:noble",
 }
 
 
@@ -380,7 +385,9 @@ def main():
     amd64_only = args.one_arch
 
     if args.ros2_testing:
-        base_image = _full_name(args.registry, "ros", _tag(ros_distro, "desktop", None, None))
+        base_image = _full_name(
+            args.registry, args.name, _tag(ros_distro, "desktop", None, None)
+        )
         amd64_images = build_ros2_testing_images(
             ros_distro,
             base_image,

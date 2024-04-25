@@ -20,11 +20,68 @@ FROM ${FROM}
 # Must redeclare so that value is available after FROM statement.
 ARG ROS_DISTRO
 
+# Setup timezone
+RUN echo 'Etc/UTC' > /etc/timezone && \
+    ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
+    apt-get update && \
+    apt-get install -q -y --no-install-recommends tzdata && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install packages
+RUN apt-get update && apt-get install -q -y --no-install-recommends \
+    dirmngr \
+    gnupg2 \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# Setup keys
+RUN set -eux; \
+       key='C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654'; \
+       export GNUPGHOME="$(mktemp -d)"; \
+       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
+       mkdir -p /usr/share/keyrings; \
+       gpg --batch --export "$key" > /usr/share/keyrings/ros2-latest-archive-keyring.gpg; \
+       gpgconf --kill all; \
+       rm -rf "$GNUPGHOME"
+
 # Setup apt sources.list for testing
 RUN echo "deb [ signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg ] http://packages.ros.org/ros2-testing/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros2-testing.list
 
-RUN cat /etc/apt/sources.list.d/ros2-testing.list
+# Setup environment
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 
-# Upgrade all packages to versions in ros2-testing
-RUN apt-get update && apt-get dist-upgrade -yy \
+ENV ROS_DISTRO ${ROS_DISTRO}
+
+# Install bootstrap tools
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    build-essential \
+    git \
+    python3-colcon-common-extensions \
+    python3-colcon-mixin \
+    python3-rosdep \
+    python3-vcstool \
     && rm -rf /var/lib/apt/lists/*
+
+# Bootstrap rosdep
+RUN rosdep init && \
+  rosdep update --rosdistro $ROS_DISTRO
+
+# Setup colcon mixin and metadata
+RUN colcon mixin add default \
+      https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
+    colcon mixin update && \
+    colcon metadata add default \
+      https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
+    colcon metadata update
+
+# Install ROS packages from ros2-testing apt repo (up to Desktop)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-${ROS_DISTRO}-ros-desktop \
+    && rm -rf /var/lib/apt/lists/*
+
+# Setup entrypoint
+COPY ./ros_entrypoint.sh /
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
