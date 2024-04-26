@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ARG ROS_DISTRO=rolling
-ARG FROM=ros:${ROS_DISTRO}-desktop
+ARG FROM=ubuntu:jammy
 
 FROM ${FROM}
 
@@ -77,7 +77,7 @@ RUN colcon mixin add default \
 
 # Install ROS packages from ros2-testing apt repo (up to Desktop)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-${ROS_DISTRO}-ros-desktop \
+    ros-${ROS_DISTRO}-desktop \
     && rm -rf /var/lib/apt/lists/*
 
 # Setup entrypoint

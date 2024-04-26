@@ -74,6 +74,7 @@ def _buildah_ros_image(
     variant,
     skip_if_exists,
     push,
+    pull,
     dry_run,
 ):
     # Given a path like "ros1/ros-core"
@@ -92,12 +93,17 @@ def _buildah_ros_image(
     if skip_if_exists and _image_exists(full_name):
         return full_name
 
+    if pull:
+        pull_arg = "--pull=true"
+    else:
+        pull_arg = "--pull=false"
+
     print("IMAGE", full_name)
 
     cmd = [
         "buildah",
         "bud",
-        "--pull=false",
+        pull_arg,
         "-t",
         full_name,
         "--build-arg",
@@ -191,19 +197,23 @@ def build_ros2_images(
 
     images = Ros2Images()
 
-    images.ros_core = _buildah_ros_image(base_image, "ros2/ros-core", **common_args)
+    images.ros_core = _buildah_ros_image(
+        base_image, "ros2/ros-core", **common_args, pull=True
+    )
     images.ros_base = _buildah_ros_image(
-        images.ros_core, "ros2/ros-base", **common_args
+        images.ros_core, "ros2/ros-base", **common_args, pull=False
     )
     images.perception = _buildah_ros_image(
         images.ros_base, "ros2/perception", **common_args
     )
-    images.desktop = _buildah_ros_image(images.ros_base, "ros2/desktop", **common_args)
+    images.desktop = _buildah_ros_image(
+        images.ros_base, "ros2/desktop", **common_args, pull=False
+    )
     images.desktop_full = _buildah_ros_image(
-        images.desktop, "ros2/desktop-full", **common_args
+        images.desktop, "ros2/desktop-full", **common_args, pull=False
     )
     images.simulation = _buildah_ros_image(
-        images.ros_base, "ros2/simulation", **common_args
+        images.ros_base, "ros2/simulation", **common_args, pull=False
     )
     return images
 
@@ -226,7 +236,7 @@ def build_ros2_testing_images(
 
     images = Ros2Images()
     images.desktop = _buildah_ros_image(
-        base_image, "ros-testing/desktop", **common_args
+        base_image, "ros-testing/desktop", **common_args, pull=True
     )
     return images
 
@@ -262,26 +272,34 @@ def build_ros1_images(
 
     images = Ros1Images()
 
-    images.ros_core = _buildah_ros_image(base_image, "ros1/ros-core", **common_args)
+    images.ros_core = _buildah_ros_image(
+        base_image, "ros1/ros-core", **common_args, pull=True
+    )
     images.ros_base = _buildah_ros_image(
-        images.ros_core, "ros1/ros-base", **common_args
+        images.ros_core, "ros1/ros-base", **common_args, pull=False
     )
-    images.robot = _buildah_ros_image(images.ros_base, "ros1/robot", **common_args)
+    images.robot = _buildah_ros_image(
+        images.ros_base, "ros1/robot", **common_args, pull=False
+    )
     images.perception = _buildah_ros_image(
-        images.ros_base, "ros1/perception", **common_args
+        images.ros_base, "ros1/perception", **common_args, pull=False
     )
-    images.viz = _buildah_ros_image(images.ros_base, "ros1/viz", **common_args)
-    images.desktop = _buildah_ros_image(images.robot, "ros1/desktop", **common_args)
+    images.viz = _buildah_ros_image(
+        images.ros_base, "ros1/viz", **common_args, pull=False
+    )
+    images.desktop = _buildah_ros_image(
+        images.robot, "ros1/desktop", **common_args, pull=False
+    )
     if not (arch == "arm" and variant == "v7"):
         # Cannot build because this platform lacks gazebo binaries
         images.desktop_full = _buildah_ros_image(
-            images.desktop, "ros1/desktop-full", **common_args
+            images.desktop, "ros1/desktop-full", **common_args, pull=False
         )
         images.simulators = _buildah_ros_image(
-            images.robot, "ros1/simulators", **common_args
+            images.robot, "ros1/simulators", **common_args, pull=False
         )
         images.simulators_osrf = _buildah_ros_image(
-            images.simulators, "ros1/simulators-osrf", **common_args
+            images.simulators, "ros1/simulators-osrf", **common_args, pull=False
         )
 
     return images
@@ -385,9 +403,6 @@ def main():
     amd64_only = args.one_arch
 
     if args.ros2_testing:
-        base_image = _full_name(
-            args.registry, args.name, _tag(ros_distro, "desktop", None, None)
-        )
         amd64_images = build_ros2_testing_images(
             ros_distro,
             base_image,
