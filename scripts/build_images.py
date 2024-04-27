@@ -74,6 +74,7 @@ def _buildah_ros_image(
     variant,
     skip_if_exists,
     push,
+    pull,
     dry_run,
 ):
     # Given a path like "ros1/ros-core"
@@ -92,12 +93,17 @@ def _buildah_ros_image(
     if skip_if_exists and _image_exists(full_name):
         return full_name
 
+    if pull:
+        pull_arg = "--pull=true"
+    else:
+        pull_arg = "--pull=false"
+
     print("IMAGE", full_name)
 
     cmd = [
         "buildah",
         "bud",
-        "--pull=false",
+        pull_arg,
         "-t",
         full_name,
         "--build-arg",
@@ -191,21 +197,47 @@ def build_ros2_images(
 
     images = Ros2Images()
 
-    images.ros_core = _buildah_ros_image(base_image, "ros2/ros-core", **common_args)
+    images.ros_core = _buildah_ros_image(
+        base_image, "ros2/ros-core", **common_args, pull=True
+    )
     images.ros_base = _buildah_ros_image(
-        images.ros_core, "ros2/ros-base", **common_args
+        images.ros_core, "ros2/ros-base", **common_args, pull=False
     )
     images.perception = _buildah_ros_image(
-        images.ros_base, "ros2/perception", **common_args
+        images.ros_base, "ros2/perception", **common_args, pull=False
     )
-    images.desktop = _buildah_ros_image(images.ros_base, "ros2/desktop", **common_args)
+    images.desktop = _buildah_ros_image(
+        images.ros_base, "ros2/desktop", **common_args, pull=False
+    )
     images.desktop_full = _buildah_ros_image(
-        images.desktop, "ros2/desktop-full", **common_args
+        images.desktop, "ros2/desktop-full", **common_args, pull=False
     )
     images.simulation = _buildah_ros_image(
-        images.ros_base, "ros2/simulation", **common_args
+        images.ros_base, "ros2/simulation", **common_args, pull=False
     )
+    return images
 
+
+def build_ros2_testing_images(
+    ros_distro, base_image, registry, name, arch, variant, skip_if_exists, push, dry_run
+):
+    """Build ROS 2 images for one specific architecture."""
+
+    common_args = {
+        "ros_distro": ros_distro,
+        "registry": registry,
+        "name": name,
+        "arch": arch,
+        "variant": variant,
+        "skip_if_exists": skip_if_exists,
+        "push": push,
+        "dry_run": dry_run,
+    }
+
+    images = Ros2Images()
+    images.desktop = _buildah_ros_image(
+        base_image, "ros-testing/desktop", **common_args, pull=True
+    )
     return images
 
 
@@ -240,26 +272,34 @@ def build_ros1_images(
 
     images = Ros1Images()
 
-    images.ros_core = _buildah_ros_image(base_image, "ros1/ros-core", **common_args)
+    images.ros_core = _buildah_ros_image(
+        base_image, "ros1/ros-core", **common_args, pull=True
+    )
     images.ros_base = _buildah_ros_image(
-        images.ros_core, "ros1/ros-base", **common_args
+        images.ros_core, "ros1/ros-base", **common_args, pull=False
     )
-    images.robot = _buildah_ros_image(images.ros_base, "ros1/robot", **common_args)
+    images.robot = _buildah_ros_image(
+        images.ros_base, "ros1/robot", **common_args, pull=False
+    )
     images.perception = _buildah_ros_image(
-        images.ros_base, "ros1/perception", **common_args
+        images.ros_base, "ros1/perception", **common_args, pull=False
     )
-    images.viz = _buildah_ros_image(images.ros_base, "ros1/viz", **common_args)
-    images.desktop = _buildah_ros_image(images.robot, "ros1/desktop", **common_args)
+    images.viz = _buildah_ros_image(
+        images.ros_base, "ros1/viz", **common_args, pull=False
+    )
+    images.desktop = _buildah_ros_image(
+        images.robot, "ros1/desktop", **common_args, pull=False
+    )
     if not (arch == "arm" and variant == "v7"):
         # Cannot build because this platform lacks gazebo binaries
         images.desktop_full = _buildah_ros_image(
-            images.desktop, "ros1/desktop-full", **common_args
+            images.desktop, "ros1/desktop-full", **common_args, pull=False
         )
         images.simulators = _buildah_ros_image(
-            images.robot, "ros1/simulators", **common_args
+            images.robot, "ros1/simulators", **common_args, pull=False
         )
         images.simulators_osrf = _buildah_ros_image(
-            images.simulators, "ros1/simulators-osrf", **common_args
+            images.simulators, "ros1/simulators-osrf", **common_args, pull=False
         )
 
     return images
@@ -311,11 +351,26 @@ def create_ros2_manifests(registry, name, ros_distro, set_of_images, push, dry_r
         )
 
 
+def create_ros2_testing_manifests(
+    registry, name, ros_distro, set_of_images, push, dry_run
+):
+    attrs = [
+        "desktop",
+    ]
+    for attr in attrs:
+        suffix = attr.replace("_", "-")
+        images = _collect(attr, set_of_images)
+        _buildah_manifest(
+            registry, name, f"{ros_distro}-{suffix}", images, push, dry_run
+        )
+
+
 ROS_DISTROS = {
     "noetic": "ubuntu:focal",
     "humble": "ubuntu:jammy",
     "iron": "ubuntu:jammy",
     "rolling": "ubuntu:jammy",
+    "jazzy": "ubuntu:noble",
 }
 
 
@@ -328,6 +383,7 @@ def parse_arguments():
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
     parser.add_argument("--one-arch", action="store_true")
+    parser.add_argument("--ros2-testing", action="store_true")
 
     args = parser.parse_args()
 
@@ -346,7 +402,41 @@ def main():
     dry_run = args.dry_run
     amd64_only = args.one_arch
 
-    if "noetic" == ros_distro:
+    if args.ros2_testing:
+        amd64_images = build_ros2_testing_images(
+            ros_distro,
+            base_image,
+            args.registry,
+            args.name,
+            "amd64",
+            None,
+            args.skip_if_exists,
+            args.push,
+            dry_run,
+        )
+        if not amd64_only:
+            arm64_v8_images = build_ros2_testing_images(
+                ros_distro,
+                base_image,
+                args.registry,
+                args.name,
+                "arm64",
+                "v8",
+                args.skip_if_exists,
+                args.push,
+                dry_run,
+            )
+        else:
+            arm64_v8_images = Ros2Images()
+        create_ros2_testing_manifests(
+            args.registry,
+            args.name,
+            ros_distro,
+            (amd64_images, arm64_v8_images),
+            args.push,
+            dry_run,
+        )
+    elif "noetic" == ros_distro:
         amd64_images = build_ros1_images(
             ros_distro,
             base_image,
