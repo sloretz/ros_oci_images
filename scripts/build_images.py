@@ -204,7 +204,7 @@ def build_ros2_images(
         images.ros_core, "ros2/ros-base", **common_args, pull=False
     )
     images.perception = _buildah_ros_image(
-        images.ros_base, "ros2/perception", **common_args
+        images.ros_base, "ros2/perception", **common_args, pull=False
     )
     images.desktop = _buildah_ros_image(
         images.ros_base, "ros2/desktop", **common_args, pull=False
