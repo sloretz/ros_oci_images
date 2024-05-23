@@ -42,6 +42,13 @@ All images are based on Ubuntu.
 | perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-perception`      |
 | simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-simulation`      |
 | desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-desktop-full`    |
+| [ROS Jazzy](http://docs.ros.org/en/jazzy)                                                     |
+| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-ros-core`        |
+| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-ros-base`        |
+| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop`         |
+| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-perception`      |
+| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-simulation`      |
+| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop-full`    |
 | [ROS Rolling](http://docs.ros.org/en/rolling)⚠️                                               |
 | ros-core        | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-ros-core`     |
 | ros-base        | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-ros-base`     |

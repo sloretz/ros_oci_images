@@ -10,6 +10,7 @@ on:
         - noetic
         - humble
         - iron
+        - jazzy
         - rolling
       image_registry:
         description: The container registry to push to (must be ghcr.io)
