@@ -72,16 +72,6 @@ All images are based on Ubuntu.
 
 simulators-osrf image contains the same packages as simulators, but updated to versions provided by packages.osrfoundation.org (PPA suggested by Gazebo).
 
-### Jazzy pre-release images
-
-Want to try [ROS Jazzy before it is released](https://docs.ros.org/en/jazzy/Releases/Release-Jazzy-Jalisco.html)?
-See the provided `desktop` variant using the [pre-release binaries](https://docs.ros.org/en/jazzy/Installation/Testing.html).
-
-| Image           | amd64 | arm v7 | arm64 v8 | Full Image Name                            |
-|-----------------|-------|--------|----------|--------------------------------------------|
-| [ROS Jazzy](http://docs.ros.org/en/jazzy)                                                |
-| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros-testing:jazzy-desktop` |
-
 ## Using with other OCI compatible tools
 
 Used containers for a while?
