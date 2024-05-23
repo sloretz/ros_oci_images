@@ -23,6 +23,10 @@ jobs:
     uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
     with:
       ros_distro: iron
+  call-build-and-deploy-jazzy:
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
+    with:
+      ros_distro: jazzy
   call-build-and-deploy-rolling:
     uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
     with:

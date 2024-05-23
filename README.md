@@ -42,6 +42,13 @@ All images are based on Ubuntu.
 | perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-perception`      |
 | simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-simulation`      |
 | desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:iron-desktop-full`    |
+| [ROS Jazzy](http://docs.ros.org/en/jazzy)                                                     |
+| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-ros-core`        |
+| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-ros-base`        |
+| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop`         |
+| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-perception`      |
+| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-simulation`      |
+| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop-full`    |
 | [ROS Rolling](http://docs.ros.org/en/rolling)⚠️                                               |
 | ros-core        | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-ros-core`     |
 | ros-base        | ✅⚠️     | ❌      | ✅⚠️        | `ghcr.io/sloretz/ros:rolling-ros-base`     |
@@ -64,16 +71,6 @@ All images are based on Ubuntu.
 ⚠️ ROS Rolling images are still on Ubuntu Jammy because some packages [are not yet available](https://github.com/sloretz/ros_oci_images/issues/2)
 
 simulators-osrf image contains the same packages as simulators, but updated to versions provided by packages.osrfoundation.org (PPA suggested by Gazebo).
-
-### Jazzy pre-release images
-
-Want to try [ROS Jazzy before it is released](https://docs.ros.org/en/jazzy/Releases/Release-Jazzy-Jalisco.html)?
-See the provided `desktop` variant using the [pre-release binaries](https://docs.ros.org/en/jazzy/Installation/Testing.html).
-
-| Image           | amd64 | arm v7 | arm64 v8 | Full Image Name                            |
-|-----------------|-------|--------|----------|--------------------------------------------|
-| [ROS Jazzy](http://docs.ros.org/en/jazzy)                                                |
-| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros-testing:jazzy-desktop` |
 
 ## Using with other OCI compatible tools
 
