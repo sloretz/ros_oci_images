@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ARG ROS_DISTRO=rolling
-ARG FROM=ubuntu:jammy
+ARG FROM=ubuntu:noble
 
 FROM ${FROM}
 
