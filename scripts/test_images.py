@@ -16,11 +16,13 @@
 
 import argparse
 import subprocess
+import sys
 
 
-# TODO(sloretz) share implementation with build_images.py
-def _full_name(registry, name, tag):
-    return f"{registry}/{name}:{tag}"
+_SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+# I'm too lazy to make a real python package
+sys.path.append(_SCRIPT_DIR)
+import common
 
 
 def _buildah_pull(full_name, dry_run):
@@ -97,7 +99,7 @@ def main():
             s = "simulators" if s == "simulators-osrf" else s
             tag = f"{ros_distro}-{s}"
             package = f"ros-{ros_distro}-{s}"
-            full_name = _full_name(args.registry, args.name, tag)
+            full_name = common._full_name(args.registry, args.name, tag)
             for arch, variant in architectures:
                 if arch == "arm" and variant == "v7":
                     if s in ("simulators", "desktop-full"):
@@ -122,7 +124,7 @@ def main():
         for s in suffixes:
             tag = f"{ros_distro}-{s}"
             package = f"ros-{ros_distro}-{s}"
-            full_name = _full_name(args.registry, args.name, tag)
+            full_name = common._full_name(args.registry, args.name, tag)
             for arch, variant in architectures:
                 _buildah_pull(full_name, dry_run)
                 _print_pkg_version(full_name, package, arch, variant, args.dry_run)
