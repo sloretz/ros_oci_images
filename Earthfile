@@ -1,5 +1,7 @@
 VERSION 0.8
 
+IMPORT ./apt AS apt
+
 noetic:
     ARG registry='localhost/'
     ARG ROS_DISTRO='noetic'
@@ -45,14 +47,14 @@ noetic:
 viz:
     ARG ROS_DISTRO
     FROM --pass-args +ros-base
-    DO +APT_INSTALL --packages=ros-${ROS_DISTRO}-viz
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-viz
     SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-viz
 
 
 desktop-full:
     ARG ROS_DISTRO
     FROM --pass-args +desktop
-    DO +APT_INSTALL --packages=ros-${ROS_DISTRO}-desktop-full
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-desktop-full
     SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-desktop-full
 
 
@@ -85,28 +87,28 @@ simulators-osrf:
 simulators:
     ARG ROS_DISTRO
     FROM --pass-args +robot
-    DO +APT_INSTALL --packages=ros-${ROS_DISTRO}-simulators
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-simulators
     SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-simulators
 
 
 perception:
     ARG ROS_DISTRO
     FROM --pass-args +ros-base
-    DO +APT_INSTALL --packages=ros-${ROS_DISTRO}-perception
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-perception
     SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-perception
 
 
 desktop:
     ARG ROS_DISTRO
     FROM --pass-args +robot
-    DO +APT_INSTALL --packages=ros-${ROS_DISTRO}-desktop
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-desktop
     SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-desktop
 
 
 robot:
     ARG ROS_DISTRO
     FROM --pass-args +ros-base
-    DO +APT_INSTALL --packages=ros-${ROS_DISTRO}-robot
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-robot
     SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-robot
 
 
@@ -116,7 +118,7 @@ ros-base:
     FROM --pass-args +ros-core
 
     # install bootstrap tools
-    DO +APT_INSTALL --packages="
+    DO apt+INSTALL --packages="
         build-essential 
         python3-rosdep
         python3-rosinstall
@@ -129,7 +131,7 @@ ros-base:
     RUN rosdep init && rosdep update --rosdistro $ROS_DISTRO
 
     # install ros packages
-    DO +APT_INSTALL --packages=ros-${ROS_DISTRO}-ros-base
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-ros-base
 
     SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-ros-base
 
@@ -145,7 +147,7 @@ ros-core:
         ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
     # Install packages
-    DO +APT_INSTALL --packages="
+    DO apt+INSTALL --packages="
         tzdata
         dirmngr
         gnupg2
@@ -171,7 +173,7 @@ ros-core:
     ENV ROS_DISTRO ${ROS_DISTRO}
 
     # Install ROS packages
-    DO +APT_INSTALL --packages=ros-${ROS_DISTRO}-ros-core
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-ros-core
 
     # Setup entrypoint
     COPY ./ros1/ros-core/ros_entrypoint.sh /
@@ -179,11 +181,3 @@ ros-core:
     ENTRYPOINT ["/ros_entrypoint.sh"]
     CMD ["bash"]
     SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-ros-core
-
-
-APT_INSTALL:
-    FUNCTION
-    ARG packages
-    RUN apt-get update && apt-get install -y --no-install-recommends \
-        $packages \
-        && rm -rf /var/lib/apt/lists/*
