@@ -24,81 +24,35 @@ If it's not accepted there, then please create an issue on this repository and w
 
 ### Install the required versions of dependencies
 
-Required to build images:
+Required to build and test images:
 
 * `qemu-user-static` version 6.2
-* `buildah` version 1.34.0
-
-Required to test images:
-
-* `podman` Not sure what version, but both versions 3.4.4 and 4.9.0 have worked for me.
+* `docker` not sure what version. 24.0.5 works.
+* `earthly` version 0.8
 
 Required to lint source code:
 
 * `black` - any 2024 version.
 
-The best way to get these dependencies is to use Ubuntu 22.04 (Jammy).
-First, install `qemu-user-static` via `sudo apt install qemu-user-static`.
-Second, [build and install buildah from source](https://github.com/containers/buildah/blob/v1.34.0/install.md#building-from-scratch).
-
-There is a script to install the build dependencies: `./scripts/install_dependencies.bash`
 
 ### Understand How the repository is structured
 
-Understanding where everything is will help you make a contribution.
+This repo uses [Earthly](https://docs.earthly.dev/) to build and push OCI images from [Earthfiles](https://docs.earthly.dev/docs/earthfile).
+The Earthfiles create OCI Images for each active [ROS distro](http://docs.ros.org/en/rolling/Releases.html).
+The Earthfiles push the images to [Github Packages](https://github.com/features/packages).
 
-At a high level, this repository uses [Python](https://www.python.org/about/gettingstarted/) scripts to invoke [buildah](https://buildah.io/) to build images from Dockerfiles.
-The python script is called using [Github Actions](https://github.com/features/actions) to build images for each active [ROS distro](http://docs.ros.org/en/rolling/Releases.html).
-The images are pushed to [Github Packages](https://github.com/features/packages).
-Afterwards anyone can pull the image they need and run it.
+There is a top-level Earthfile which imports from Earthfiles in subfolders.
+The top-level Earthfile defines what platforms each ROS distro's images are built for.
 
-#### What's in the ros1 and ros2 folders
+The `ros1` and `ros2` folders each have an Earthfile used to create images with ROS 1 and ROS 2 installed from debian packages, respectively.
+The ROS 1 images definitions were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/noetic/ubuntu/focal), and the ROS 2 definitions  were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/rolling/ubuntu/jammy).
+The Earthfiles don't need to match the Dockerfiles in [osrf/docker_images](https://github.com/osrf/docker_images), but they should stay close.
 
-The `ros1` and `ros2` folders hold Dockerfile definitions for ROS 1 and ROS 2 respectively.
+The `ros1` Earthfile defines a target for ROS Noetic calle `noetic`.
+That target builds an OCI image for each [metapackage defined by REP 142](https://www.ros.org/reps/rep-0142.html) plus `simulators-osrf`.
+The `ros2` Earthfile defines a target for each active ROS 2 distro.
+Eatch target creates an OCI image for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
 
-```
-ros1
-├── desktop
-│   └── Dockerfile
-├── desktop-full
-│   └── Dockerfile
-├── perception
-│   └── Dockerfile
-├── robot
-│   └── Dockerfile
-├── ros-base
-│   └── Dockerfile
-├── ros-core
-│   ├── Dockerfile
-│   └── ros_entrypoint.sh
-├── simulators
-│   └── Dockerfile
-└── viz
-    └── Dockerfile
-```
-
-```
-ros2
-├── desktop
-│   └── Dockerfile
-├── desktop-full
-│   └── Dockerfile
-├── perception
-│   └── Dockerfile
-├── ros-base
-│   └── Dockerfile
-├── ros-core
-│   ├── Dockerfile
-│   └── ros_entrypoint.sh
-└── simulation
-    └── Dockerfile
-```
-
-Originally the files in `ros1` were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/noetic/ubuntu/focal), and the ROS 2 definitions  were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/rolling/ubuntu/jammy).
-The files don't need to match the ones in [osrf/docker_images](https://github.com/osrf/docker_images) exactly, but they should stay close.
-
-In the `ros1` folder each subfolder is named after a [metapackage defined by REP 142](https://www.ros.org/reps/rep-0142.html).
-In the `ros2` folder each subfolder is named after a [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
 If you think there should be a new folder in `ros2` (ex: a navigation image with Nav2, or a moveit2 image) then please [propose a new variant to REP 2001 first](https://github.com/ros-infrastructure/rep/blob/master/rep-2001.rst) as a pull request to the [ros-infrastructure/rep repo](https://github.com/ros-infrastructure/rep).
 After it's accepted we can create an image for it here.
 If you think there should be a new ROS 1 image, I would suggest not creating one.
@@ -106,43 +60,22 @@ If you think there should be a new ROS 1 image, I would suggest not creating one
 
 #### What's in the scripts folder
 
-The `scripts` folder holds Python and Bash scripts used for building and testing the images
+The `scripts` folder holds miscellaneous scripts used by the github actions in this repository.
 
-```
-scripts/
-├── build_images.py
-├── install_dependencies.bash
-└── test_images.py
-```
 
-The file `build_images.py` invokes buildah to create all images for one ROS distro.
-Inside it is hardcoded knowledge of what architectures are supported by each ROS distro.
-It also has the option to push images to github packages.
-When pushing images, each image is built and then pushed one at a time to avoid rate limiting on pushing images.
-Run `./scripts/build_images.py --help` to see what options it takes.
-
-The file `test_images.py` invokes podman to run commands in all images for one ROS distro.
+The file `test_images.py` invokes docker to run commands in all images for one ROS distro.
 Inside it is another hardcoded copy of the knowledge of what architectures are supported by each ROS distro.
 Run `./scripts/test_images.py --help` to see what options it takes.
 
-The `install_dependencies.bash` script installs the dependencies needed to build images on an Ubuntu 22.04 machine.
+The `install_dependencies.bash` script installs `qemu-user-static` on an Ubuntu 22.04 machine.
+
+The `is_new_version_available.py` script checks if there's a new verion of a debian package.
+This is used to determine when new images need to be built after a ROS distro's packages get sync'd to the main apt repo.
 
 #### What's in the .github/workflows folder
 
 This folder contains github workflows.
 These are used to build and test the images.
-
-```
-.github/workflows/
-├── build-and-deploy-all-if-necessary.yaml
-├── build-and-deploy-all.yaml
-├── build-and-deploy-one-ros-distro-if-necessary.yaml
-├── build-and-deploy-one-ros-distro.yaml
-├── ci-build-amd64-image-one-ros-distro.yaml
-├── ci-build-amd64-images.yaml
-├── python-lint.yaml
-└── test-deployed-images-one-ros-distro.yaml
-```
 
 The workflow `test-deployed-images-one-ros-distro.yaml` pulls all images for a given ROS distro and makes sure the `ros2` command can be used.
 
