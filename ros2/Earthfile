@@ -4,7 +4,7 @@ IMPORT ../apt AS apt
 
 rolling:
     ARG image_name='ros'
-    ARG registry='localhost'
+    ARG registry='localhost/'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
         --image_name=$image_name \
@@ -14,7 +14,7 @@ rolling:
 
 jazzy:
     ARG image_name='ros'
-    ARG registry='localhost'
+    ARG registry='localhost/'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
         --image_name=$image_name \
@@ -24,7 +24,7 @@ jazzy:
 
 iron:
     ARG image_name='ros'
-    ARG registry='localhost'
+    ARG registry='localhost/'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
         --image_name=$image_name \
@@ -34,7 +34,7 @@ iron:
 
 humble:
     ARG image_name='ros'
-    ARG registry='localhost'
+    ARG registry='localhost/'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
         --image_name=$image_name \
