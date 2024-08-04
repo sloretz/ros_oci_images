@@ -7,6 +7,7 @@ rolling:
     ARG registry='localhost'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
+        --image_name=$image_name \
         --ROS_DISTRO='rolling' \
         --UBUNTU_IMAGE='ubuntu:noble'
 
@@ -16,6 +17,7 @@ jazzy:
     ARG registry='localhost'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
+        --image_name=$image_name \
         --ROS_DISTRO='jazzy' \
         --UBUNTU_IMAGE='ubuntu:noble'
 
@@ -25,6 +27,7 @@ iron:
     ARG registry='localhost'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
+        --image_name=$image_name \
         --ROS_DISTRO='jazzy' \
         --UBUNTU_IMAGE='ubuntu:jammy'
 
@@ -34,6 +37,7 @@ humble:
     ARG registry='localhost'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
+        --image_name=$image_name \
         --ROS_DISTRO='jazzy' \
         --UBUNTU_IMAGE='ubuntu:jammy'
 
