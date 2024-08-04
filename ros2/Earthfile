@@ -28,7 +28,7 @@ iron:
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
         --image_name=$image_name \
-        --ROS_DISTRO='jazzy' \
+        --ROS_DISTRO='iron' \
         --UBUNTU_IMAGE='ubuntu:jammy'
 
 
@@ -38,7 +38,7 @@ humble:
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
         --image_name=$image_name \
-        --ROS_DISTRO='jazzy' \
+        --ROS_DISTRO='humble' \
         --UBUNTU_IMAGE='ubuntu:jammy'
 
 
