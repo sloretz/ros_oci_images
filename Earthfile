@@ -37,28 +37,28 @@ noetic:
 rolling-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
-    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 ros2+rolling
+    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +rolling
 
 
 jazzy-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
-    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 ros2+jazzy
+    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +jazzy
 
 
 iron-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
-    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 ros2+iron
+    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +iron
 
 
 humble-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
-    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 ros2+humble
+    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +humble
 
 
 noetic-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
-    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm/v7 --platform=linux/arm64/v8 ros1+noetic
+    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm/v7 --platform=linux/arm64/v8 +noetic
