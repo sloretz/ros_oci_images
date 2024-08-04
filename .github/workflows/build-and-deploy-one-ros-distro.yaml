@@ -45,16 +45,6 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
-        with:
-          tool-cache: false
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: true
-          swap-storage: true
       - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
         with:
           version: v0.8.0
@@ -76,9 +66,9 @@ jobs:
             registry: ${{ inputs.image_registry }}
 
       - name: Build and Push Images
-        run: earthly --push "+${{ inputs.ros_distro }}" \
-            --registry="${{ inputs.image_registry }}/" \
-            --image_name="${{ inputs.image_name }}" \
+        run: earthly --push +${{ inputs.ros_distro }} \
+            --registry=${{ inputs.image_registry }}/ \
+            --image_name=${{ inputs.image_name }} \
 
   call-test-deployed-images:
     needs: build-and-deploy
