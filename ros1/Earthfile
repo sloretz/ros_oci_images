@@ -3,45 +3,52 @@ VERSION 0.8
 IMPORT ../apt AS apt
 
 noetic:
+    ARG image_name='ros'
     ARG registry='localhost/'
     ARG ROS_DISTRO='noetic'
     ARG UBUNTU_IMAGE='ubuntu:focal'
 
     # ros-core
     FROM --pass-args +ros-core
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-ros-core
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-ros-core
 
     # ros-base
     FROM --pass-args +ros-base
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-ros-base
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-ros-base
 
     # robot
     FROM --pass-args +robot
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-robot
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-robot
 
     # desktop
     FROM --pass-args +desktop
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-desktop
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop
 
     # perception
     FROM --pass-args +perception
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-perception
-
-    # simulators
-    FROM --pass-args +simulators
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-simulators
-
-    # simulators-osrf
-    FROM --pass-args +simulators-osrf
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-simulators-osrf
-
-    # desktop-full
-    FROM --pass-args +desktop-full
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-desktop-full
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-perception
 
     # viz
     FROM --pass-args +viz
-    SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-viz
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-viz
+
+    ARG TARGETARCH
+    ARG TARGETVARIANT
+
+    # Gazebo 11 doesn't have binaries for arm/v7
+    IF [ "$TARGETARCH" = "arm" -a "$TARGETVARIANT" = "v7" ]
+        # simulators
+        FROM --pass-args +simulators
+        SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-simulators
+
+        # simulators-osrf
+        FROM --pass-args +simulators-osrf
+        SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-simulators-osrf
+
+        # desktop-full
+        FROM --pass-args +desktop-full
+        SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-desktop-full
+    END
 
 
 viz:

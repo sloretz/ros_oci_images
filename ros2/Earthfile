@@ -1,0 +1,177 @@
+VERSION 0.8
+
+IMPORT ../apt AS apt
+
+rolling:
+    ARG image_name='ros'
+    ARG registry='localhost'
+    DO +ROS_BINARY_IMAGES \
+        --registry=$registry \
+        --ROS_DISTRO='rolling' \
+        --UBUNTU_IMAGE='ubuntu:noble'
+
+
+jazzy:
+    ARG image_name='ros'
+    ARG registry='localhost'
+    DO +ROS_BINARY_IMAGES \
+        --registry=$registry \
+        --ROS_DISTRO='jazzy' \
+        --UBUNTU_IMAGE='ubuntu:noble'
+
+
+iron:
+    ARG image_name='ros'
+    ARG registry='localhost'
+    DO +ROS_BINARY_IMAGES \
+        --registry=$registry \
+        --ROS_DISTRO='jazzy' \
+        --UBUNTU_IMAGE='ubuntu:jammy'
+
+
+humble:
+    ARG image_name='ros'
+    ARG registry='localhost'
+    DO +ROS_BINARY_IMAGES \
+        --registry=$registry \
+        --ROS_DISTRO='jazzy' \
+        --UBUNTU_IMAGE='ubuntu:jammy'
+
+
+ROS_BINARY_IMAGES:
+    FUNCTION
+    ARG --required image_name
+    ARG --required registry
+    ARG --required ROS_DISTRO
+    ARG --required UBUNTU_IMAGE
+
+    # ros-core
+    FROM --pass-args +ros-core
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-ros-core
+
+    # ros-base
+    FROM --pass-args +ros-base
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-ros-base
+
+    # desktop
+    FROM --pass-args +desktop
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop
+
+    # perception
+    FROM --pass-args +perception
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-perception
+
+    # simulation
+    FROM --pass-args +simulation
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulation
+
+    # desktop-full
+    FROM --pass-args +desktop-full
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop-full
+
+
+ros-core:
+    ARG UBUNTU_IMAGE
+    ARG ROS_DISTRO
+
+    FROM $UBUNTU_IMAGE
+
+    # Setup timezone
+    RUN echo 'Etc/UTC' > /etc/timezone && \
+        ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
+    # Install packages
+    DO apt+INSTALL --packages="
+        tzdata
+        dirmngr
+        gnupg2
+        lsb-release"
+
+    # Setup keys
+    RUN set -eux; \
+        key='C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654'; \
+        export GNUPGHOME="$(mktemp -d)"; \
+        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
+        mkdir -p /usr/share/keyrings; \
+        gpg --batch --export "$key" > /usr/share/keyrings/ros2-latest-archive-keyring.gpg; \
+        gpgconf --kill all; \
+        rm -rf "$GNUPGHOME"
+
+    # Setup sources.list
+    RUN echo "deb [ signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg ] http://packages.ros.org/ros2/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros2-latest.list
+    # Setup environment
+    ENV LANG C.UTF-8
+    ENV LC_ALL C.UTF-8
+
+    ENV ROS_DISTRO ${ROS_DISTRO}
+
+    # Install ROS packages
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-ros-core
+
+    # Setup entrypoint
+    COPY ./ros_entrypoint.sh /
+
+    ENTRYPOINT ["/ros_entrypoint.sh"]
+    CMD ["bash"]
+
+    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-ros-core
+
+
+ros-base:
+    ARG ROS_DISTRO
+
+    FROM --pass-args +ros-core
+
+    # Install bootstrap tools
+    DO apt+INSTALL --packages="
+        build-essential
+        git
+        python3-colcon-common-extensions
+        python3-colcon-mixin
+        python3-rosdep
+        python3-vcstool"
+
+    # Bootstrap rosdep
+    RUN rosdep init && \
+        rosdep update --rosdistro $ROS_DISTRO
+
+    # Setup colcon mixin and metadata
+    RUN colcon mixin add default \
+        https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
+        colcon mixin update && \
+        colcon metadata add default \
+        https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
+        colcon metadata update
+
+    # Install ROS packages
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-ros-base
+
+    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-ros-base
+
+
+desktop:
+    ARG ROS_DISTRO
+    FROM --pass-args +ros-base
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-desktop
+    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-desktop
+
+
+perception:
+    ARG ROS_DISTRO
+    FROM --pass-args +ros-base
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-perception
+    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-perception
+
+
+simulation:
+    ARG ROS_DISTRO
+    FROM --pass-args +ros-base
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-simulation
+    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-simulation
+
+
+desktop-full:
+    ARG ROS_DISTRO
+    FROM --pass-args +desktop
+    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-desktop-full
+    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-desktop-full

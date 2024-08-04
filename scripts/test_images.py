@@ -23,16 +23,16 @@ def _full_name(registry, name, tag):
     return f"{registry}/{name}:{tag}"
 
 
-def _buildah_pull(full_name, dry_run):
-    cmd = ["buildah", "pull", full_name]
+def _pull(full_name, dry_run):
+    cmd = ["docker", "pull", full_name]
     if dry_run:
         print(cmd)
     else:
         subprocess.check_call(cmd)
 
 
-def _podman_run(full_name, extra_cmd, arch=None, variant=None, dry_run=False):
-    cmd = ["podman", "run", "--rm=true", "-ti"]
+def _run(full_name, extra_cmd, arch=None, variant=None, dry_run=False):
+    cmd = ["docker", "run", "--rm=true", "-ti"]
     if arch:
         cmd.append("--arch")
         cmd.append(arch)
@@ -49,12 +49,12 @@ def _podman_run(full_name, extra_cmd, arch=None, variant=None, dry_run=False):
 
 def _print_ros2_help(full_name, arch=None, variant=None, dry_run=False):
     cmd = ["ros2", "--help"]
-    _podman_run(full_name, cmd, arch, variant, dry_run)
+    _run(full_name, cmd, arch, variant, dry_run)
 
 
 def _print_pkg_version(full_name, pkg, arch=None, variant=None, dry_run=False):
     cmd = ["apt-cache", "show", pkg]
-    _podman_run(full_name, cmd, arch, variant, dry_run)
+    _run(full_name, cmd, arch, variant, dry_run)
 
 
 def parse_arguments():
@@ -103,7 +103,7 @@ def main():
                     if s in ("simulators", "desktop-full"):
                         # Skip since these metapackages aren't available in arm v7
                         continue
-                _buildah_pull(full_name, dry_run)
+                _pull(full_name, dry_run)
                 _print_pkg_version(full_name, package, arch, variant, args.dry_run)
     else:
         # ROS 2
@@ -124,7 +124,7 @@ def main():
             package = f"ros-{ros_distro}-{s}"
             full_name = _full_name(args.registry, args.name, tag)
             for arch, variant in architectures:
-                _buildah_pull(full_name, dry_run)
+                _pull(full_name, dry_run)
                 _print_pkg_version(full_name, package, arch, variant, args.dry_run)
                 _print_ros2_help(full_name, arch, variant, dry_run)
 

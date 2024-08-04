@@ -66,30 +66,16 @@ jobs:
         with:
           attempt_limit: 3
           attempt_delay: 240000  # 4 minutes
-          action: redhat-actions/podman-login@9184318aae1ee5034fbfbacc0388acf12669171f  # v1
+          action: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567  # v3.3.0
           with: |
             username: ${{ github.actor }}
             password: ${{ github.token }}
             registry: ${{ inputs.image_registry }}
 
-      - name: Dry Run
-        id: dry-run
-        run: |
-          output=$(./scripts/build_images.py \
-            --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "${{ inputs.image_registry }}" \
-            --name "${{ inputs.image_name }}" \
-            --push \
-            --dry-run)
-            echo "${output}"
-
       - name: Build and Push Images
-        run: |
-          ./scripts/build_images.py \
-            --rosdistro "${{ inputs.ros_distro }}" \
+        run: earthly --push +"${{ inputs.ros_distro }}" \
             --registry "${{ inputs.image_registry }}" \
-            --name "${{ inputs.image_name }}" \
-            --push
+            --image_name "${{ inputs.image_name }}" \
 
   call-test-deployed-images:
     needs: build-and-deploy
