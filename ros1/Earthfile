@@ -38,16 +38,16 @@ noetic:
     # Gazebo 11 doesn't have binaries for arm/v7
     IF [ "$TARGETARCH" = "arm" -a "$TARGETVARIANT" = "v7" ]
         # simulators
-        FROM --pass-args +simulators
-        SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-simulators
+        FROM +simulators --ROS_DISTRO=$ROS_DISTRO
+        SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators
 
         # simulators-osrf
-        FROM --pass-args +simulators-osrf
-        SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-simulators-osrf
+        FROM +simulators-osrf --ROS_DISTRO=$ROS_DISTRO
+        SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators-osrf
 
         # desktop-full
-        FROM --pass-args +desktop-full
-        SAVE IMAGE --push ${registry}ros:${ROS_DISTRO}-desktop-full
+        FROM +desktop-full --ROS_DISTRO=$ROS_DISTRO
+        SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop-full
     END
 
 
