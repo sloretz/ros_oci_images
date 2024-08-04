@@ -77,8 +77,8 @@ jobs:
 
       - name: Build and Push Images
         run: earthly --push "+${{ inputs.ros_distro }}" \
-            --registry "${{ inputs.image_registry }}/" \
-            --image_name "${{ inputs.image_name }}" \
+            --registry="${{ inputs.image_registry }}/" \
+            --image_name="${{ inputs.image_name }}" \
 
   call-test-deployed-images:
     needs: build-and-deploy
