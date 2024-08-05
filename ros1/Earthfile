@@ -7,6 +7,8 @@ noetic:
     ARG registry='localhost/'
     ARG ROS_DISTRO='noetic'
     ARG UBUNTU_IMAGE='ubuntu:focal'
+    ARG TARGETARCH
+    ARG TARGETVARIANT
 
     # ros-core
     FROM --pass-args +ros-core
@@ -32,21 +34,18 @@ noetic:
     FROM --pass-args +viz
     SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-viz
 
-    ARG TARGETARCH
-    ARG TARGETVARIANT
-
     # Gazebo 11 doesn't have binaries for arm/v7
     IF [ "$TARGETARCH" = "arm" -a "$TARGETVARIANT" = "v7" ]
         # simulators
-        FROM +simulators --ROS_DISTRO=$ROS_DISTRO
+        FROM --pass-args +simulators
         SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators
 
         # simulators-osrf
-        FROM +simulators-osrf --ROS_DISTRO=$ROS_DISTRO
+        FROM --pass-args +simulators-osrf
         SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators-osrf
 
         # desktop-full
-        FROM +desktop-full --ROS_DISTRO=$ROS_DISTRO
+        FROM --pass-args +desktop-full
         SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop-full
     END
 
