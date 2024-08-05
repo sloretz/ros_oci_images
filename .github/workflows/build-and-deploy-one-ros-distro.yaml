@@ -76,7 +76,7 @@ jobs:
             registry: ${{ inputs.image_registry }}
 
       - name: Build and Push Images
-        run: earthly --push +${{ inputs.ros_distro }}-multiarch --registry=${{ inputs.image_registry }}/ --image_name=${{ inputs.image_name }}
+        run: earthly --ci --push +${{ inputs.ros_distro }}-multiarch --registry=${{ inputs.image_registry }}/ --image_name=${{ inputs.image_name }}
 
   call-test-deployed-images:
     needs: build-and-deploy
