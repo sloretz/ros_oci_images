@@ -7,8 +7,6 @@ noetic:
     ARG registry='localhost/'
     ARG ROS_DISTRO='noetic'
     ARG UBUNTU_IMAGE='ubuntu:focal'
-    ARG TARGETARCH
-    ARG TARGETVARIANT
 
     # ros-core
     FROM --pass-args +ros-core
@@ -34,20 +32,17 @@ noetic:
     FROM --pass-args +viz
     SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-viz
 
-    # Gazebo 11 doesn't have binaries for arm/v7
-    IF [ "$TARGETARCH" = "arm" -a "$TARGETVARIANT" = "v7" ]
-        # simulators
-        FROM --pass-args +simulators
-        SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators
+    # simulators
+    FROM --pass-args +simulators
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators
 
-        # simulators-osrf
-        FROM --pass-args +simulators-osrf
-        SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators-osrf
+    # simulators-osrf
+    FROM --pass-args +simulators-osrf
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators-osrf
 
-        # desktop-full
-        FROM --pass-args +desktop-full
-        SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop-full
-    END
+    # desktop-full
+    FROM --pass-args +desktop-full
+    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop-full
 
 
 viz:
@@ -60,8 +55,15 @@ viz:
 desktop-full:
     ARG ROS_DISTRO
     FROM --pass-args +desktop
-    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-desktop-full
-    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-desktop-full
+
+    # Gazebo 11 doesn't have binaries for arm/v7
+    ARG TARGETARCH
+    ARG TARGETVARIANT
+    IF [ "$TARGETARCH" = "arm" -a "$TARGETVARIANT" = "v7" ]
+    ELSE
+        DO apt+INSTALL --packages=ros-${ROS_DISTRO}-desktop-full
+        SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-desktop-full
+    END
 
 
 simulators-osrf:
@@ -69,33 +71,45 @@ simulators-osrf:
 
     FROM --pass-args +simulators
 
-    # setup keys
-    RUN set -eux; \
-        key='D2486D2DD83DB69272AFE98867170598AF249743'; \
-        export GNUPGHOME="$(mktemp -d)"; \
-        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
-        mkdir -p /usr/share/keyrings; \
-        gpg --batch --export "$key" > /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg; \
-        gpgconf --kill all; \
-        rm -rf "$GNUPGHOME"
+    # Gazebo 11 doesn't have binaries for arm/v7
+    ARG TARGETARCH
+    ARG TARGETVARIANT
+    IF [ "$TARGETARCH" = "arm" -a "$TARGETVARIANT" = "v7" ]
+    ELSE
+        # setup keys
+        RUN set -eux; \
+            key='D2486D2DD83DB69272AFE98867170598AF249743'; \
+            export GNUPGHOME="$(mktemp -d)"; \
+            gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
+            mkdir -p /usr/share/keyrings; \
+            gpg --batch --export "$key" > /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg; \
+            gpgconf --kill all; \
+            rm -rf "$GNUPGHOME"
 
-    # setup osrf sources.list
-    RUN . /etc/os-release \
-        && echo "deb [ signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg ] http://packages.osrfoundation.org/gazebo/ubuntu-stable focal main" > /etc/apt/sources.list.d/gazebo-latest.list
+        # setup osrf sources.list
+        RUN . /etc/os-release \
+            && echo "deb [ signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg ] http://packages.osrfoundation.org/gazebo/ubuntu-stable focal main" > /etc/apt/sources.list.d/gazebo-latest.list
 
-    # update gazebo packages from osrf repo
-    RUN apt-get update && apt-get dist-upgrade -yy \
-    && rm -rf /var/lib/apt/lists/*
+        # update gazebo packages from osrf repo
+        RUN apt-get update && apt-get dist-upgrade -yy \
+        && rm -rf /var/lib/apt/lists/*
 
-    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-simulators-osrf
+        SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-simulators-osrf
+    END
 
 
 simulators:
     ARG ROS_DISTRO
     FROM --pass-args +robot
-    DO apt+INSTALL --packages=ros-${ROS_DISTRO}-simulators
-    SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-simulators
 
+    # Gazebo 11 doesn't have binaries for arm/v7
+    ARG TARGETARCH
+    ARG TARGETVARIANT
+    IF [ "$TARGETARCH" = "arm" -a "$TARGETVARIANT" = "v7" ]
+    ELSE
+        DO apt+INSTALL --packages=ros-${ROS_DISTRO}-simulators
+        SAVE IMAGE localhost/ros-intermediate:${ROS_DISTRO}-simulators
+    END
 
 perception:
     ARG ROS_DISTRO
