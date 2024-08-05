@@ -23,22 +23,19 @@ def _full_name(registry, name, tag):
     return f"{registry}/{name}:{tag}"
 
 
-def _buildah_pull(full_name, dry_run):
-    cmd = ["buildah", "pull", full_name]
+def _pull(full_name, dry_run):
+    cmd = ["docker", "pull", full_name]
     if dry_run:
         print(cmd)
     else:
         subprocess.check_call(cmd)
 
 
-def _podman_run(full_name, extra_cmd, arch=None, variant=None, dry_run=False):
-    cmd = ["podman", "run", "--rm=true", "-ti"]
-    if arch:
-        cmd.append("--arch")
-        cmd.append(arch)
-        if variant:
-            cmd.append("--variant")
-            cmd.append(variant)
+def _run(full_name, extra_cmd, platform=None, dry_run=False):
+    cmd = ["docker", "run", "--rm=true"]
+    if platform:
+        cmd.append("--platform")
+        cmd.append(platform)
     cmd.append(full_name)
     cmd.extend(extra_cmd)
     if dry_run:
@@ -47,14 +44,14 @@ def _podman_run(full_name, extra_cmd, arch=None, variant=None, dry_run=False):
         subprocess.check_call(cmd)
 
 
-def _print_ros2_help(full_name, arch=None, variant=None, dry_run=False):
+def _print_ros2_help(full_name, platform=None, dry_run=False):
     cmd = ["ros2", "--help"]
-    _podman_run(full_name, cmd, arch, variant, dry_run)
+    _run(full_name, cmd, platform, dry_run)
 
 
-def _print_pkg_version(full_name, pkg, arch=None, variant=None, dry_run=False):
+def _print_pkg_version(full_name, pkg, platform=None, dry_run=False):
     cmd = ["apt-cache", "show", pkg]
-    _podman_run(full_name, cmd, arch, variant, dry_run)
+    _run(full_name, cmd, platform, dry_run)
 
 
 def parse_arguments():
@@ -75,58 +72,71 @@ def main():
     ros_distro = args.rosdistro.lower()
     dry_run = args.dry_run
 
+    amd64 = "linux/amd64"
+    armhf = "linux/arm/v7"
+    arm64 = "linux/arm64/v8"
+
     if "noetic" == ros_distro:
         # ROS 1
-        suffixes = [
-            "ros-core",
-            "ros-base",
-            "desktop",
-            "perception",
-            "simulators",
-            "simulators-osrf",
-            "desktop-full",
-            "robot",
-            "viz",
+        combos = [
+            ("ros-core", amd64),
+            ("ros-base", amd64),
+            ("desktop", amd64),
+            ("perception", amd64),
+            ("simulators", amd64),
+            ("simulators-osrf", amd64),
+            ("desktop-full", amd64),
+            ("robot", amd64),
+            ("viz", amd64),
+            ("ros-core", armhf),
+            ("ros-base", armhf),
+            ("desktop", armhf),
+            ("perception", armhf),
+            # ("simulators", armhf),
+            # ("simulators-osrf", armhf),
+            # ("desktop-full", armhf),
+            ("robot", armhf),
+            ("viz", armhf),
+            ("ros-core", arm64),
+            ("ros-base", arm64),
+            ("desktop", arm64),
+            ("perception", arm64),
+            ("simulators", arm64),
+            ("simulators-osrf", arm64),
+            ("desktop-full", arm64),
+            ("robot", arm64),
+            ("viz", arm64),
         ]
-        architectures = [
-            ("amd64", None),
-            ("arm", "v7"),
-            ("arm64", "v8"),
-        ]
-        for s in suffixes:
-            s = "simulators" if s == "simulators-osrf" else s
-            tag = f"{ros_distro}-{s}"
-            package = f"ros-{ros_distro}-{s}"
+        for image, platform in combos:
+            metapackage = "simulators" if image == "simulators-osrf" else image
+            tag = f"{ros_distro}-{metapackage}"
+            package = f"ros-{ros_distro}-{metapackage}"
             full_name = _full_name(args.registry, args.name, tag)
-            for arch, variant in architectures:
-                if arch == "arm" and variant == "v7":
-                    if s in ("simulators", "desktop-full"):
-                        # Skip since these metapackages aren't available in arm v7
-                        continue
-                _buildah_pull(full_name, dry_run)
-                _print_pkg_version(full_name, package, arch, variant, args.dry_run)
+            _pull(full_name, dry_run)
+            _print_pkg_version(full_name, package, platform, args.dry_run)
     else:
         # ROS 2
-        suffixes = [
-            "ros-core",
-            "ros-base",
-            "desktop",
-            "perception",
-            "simulation",
-            "desktop-full",
+        combos = [
+            ("ros-core", amd64),
+            ("ros-base", amd64),
+            ("desktop", amd64),
+            ("perception", amd64),
+            ("simulation", amd64),
+            ("desktop-full", amd64),
+            ("ros-core", arm64),
+            ("ros-base", arm64),
+            ("desktop", arm64),
+            ("perception", arm64),
+            ("simulation", arm64),
+            ("desktop-full", arm64),
         ]
-        architectures = [
-            ("amd64", None),
-            ("arm64", "v8"),
-        ]
-        for s in suffixes:
-            tag = f"{ros_distro}-{s}"
-            package = f"ros-{ros_distro}-{s}"
+        for image, platform in combos:
+            tag = f"{ros_distro}-{image}"
+            package = f"ros-{ros_distro}-{image}"
             full_name = _full_name(args.registry, args.name, tag)
-            for arch, variant in architectures:
-                _buildah_pull(full_name, dry_run)
-                _print_pkg_version(full_name, package, arch, variant, args.dry_run)
-                _print_ros2_help(full_name, arch, variant, dry_run)
+            _pull(full_name, dry_run)
+            _print_pkg_version(full_name, package, platform, args.dry_run)
+            _print_ros2_help(full_name, platform, dry_run)
 
 
 if __name__ == "__main__":

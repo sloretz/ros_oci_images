@@ -55,6 +55,9 @@ jobs:
           large-packages: true
           docker-images: true
           swap-storage: true
+      - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
+        with:
+          version: v0.8.0
       - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
@@ -66,30 +69,14 @@ jobs:
         with:
           attempt_limit: 3
           attempt_delay: 240000  # 4 minutes
-          action: redhat-actions/podman-login@9184318aae1ee5034fbfbacc0388acf12669171f  # v1
+          action: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567  # v3.3.0
           with: |
             username: ${{ github.actor }}
             password: ${{ github.token }}
             registry: ${{ inputs.image_registry }}
 
-      - name: Dry Run
-        id: dry-run
-        run: |
-          output=$(./scripts/build_images.py \
-            --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "${{ inputs.image_registry }}" \
-            --name "${{ inputs.image_name }}" \
-            --push \
-            --dry-run)
-            echo "${output}"
-
       - name: Build and Push Images
-        run: |
-          ./scripts/build_images.py \
-            --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "${{ inputs.image_registry }}" \
-            --name "${{ inputs.image_name }}" \
-            --push
+        run: earthly --ci --push +${{ inputs.ros_distro }}-multiarch --registry=${{ inputs.image_registry }}/ --image_name=${{ inputs.image_name }}
 
   call-test-deployed-images:
     needs: build-and-deploy

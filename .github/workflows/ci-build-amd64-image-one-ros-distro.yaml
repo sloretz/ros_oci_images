@@ -14,27 +14,14 @@ jobs:
     name: CI Build AMD64 Images For One ROS Distro
     runs-on: ubuntu-latest
     steps:
+      - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
+        with:
+          version: v0.8.0
       - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
       - name: Install dependencies
         run: ./scripts/install_dependencies.bash
 
-      - name: Dry Run
-        id: dry-run
-        run: |
-          output=$(./scripts/build_images.py \
-            --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "localhost" \
-            --name "ros-ci" \
-            --one-arch \
-            --dry-run)
-            echo "${output}"
-
-      - name: Build and Push Images
-        run: |
-          ./scripts/build_images.py \
-            --rosdistro "${{ inputs.ros_distro }}" \
-            --registry "localhost" \
-            --name "ros-ci" \
-            --one-arch
+      - name: Build Images
+        run: earthly --ci +"${{ inputs.ros_distro }}"

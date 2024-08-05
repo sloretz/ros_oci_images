@@ -1,0 +1,15 @@
+name: CI Check test_images.py works
+
+on:
+  pull_request
+
+jobs:
+
+  call-ci-test-noetic:
+    uses: ./.github/workflows/test-deployed-images-one-ros-distro.yaml
+    with:
+      ros_distro: noetic
+  call-ci-build-rolling:
+    uses: ./.github/workflows/test-deployed-images-one-ros-distro.yaml
+    with:
+      ros_distro: rolling
