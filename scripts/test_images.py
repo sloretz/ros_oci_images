@@ -32,7 +32,7 @@ def _pull(full_name, dry_run):
 
 
 def _run(full_name, extra_cmd, platform=None, dry_run=False):
-    cmd = ["docker", "run", "--rm=true", "-ti"]
+    cmd = ["docker", "run", "--rm=true"]
     if platform:
         cmd.append("--platform")
         cmd.append(platform)
