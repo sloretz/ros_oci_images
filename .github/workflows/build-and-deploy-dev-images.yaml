@@ -1,0 +1,61 @@
+name: Build and Deploy Dev Container Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_registry:
+        description: The container registry to push to (must be ghcr.io)
+        default: "ghcr.io/sloretz"
+        type: string
+      image_name:
+        description: The name of the image
+        default: "ros-dev"
+        type: string
+  workflow_call:
+    inputs:
+      image_registry:
+        description: The container registry to push to (must be ghcr.io)
+        default: "ghcr.io/sloretz"
+        type: string
+      image_name:
+        description: The name of the image
+        default: "ros-dev"
+        type: string
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
+        with:
+          version: v0.8.0
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+      - name: Install dependencies
+        run: ./scripts/install_dependencies.bash
+
+      - name: Log in to ghcr.io
+        uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
+        with:
+          attempt_limit: 3
+          attempt_delay: 240000  # 4 minutes
+          action: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567  # v3.3.0
+          with: |
+            username: ${{ github.actor }}
+            password: ${{ github.token }}
+            registry: ${{ inputs.image_registry }}
+
+      - name: Build and Push Images
+        run: |
+          earthly --ci --push \
+            +ros-dev-ubuntu-noble-multiarch \
+            +ros-dev-ubuntu-jammy-multiarch \
+            --registry=${{ inputs.image_registry }}/ \
+            --image_name=${{ inputs.image_name }}

@@ -31,3 +31,6 @@ jobs:
     uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
     with:
       ros_distro: rolling
+
+  call-build-and-deploy-dev-images:
+    uses: ./.github/workflows/build-and-deploy-dev-images.yaml
