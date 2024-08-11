@@ -35,6 +35,13 @@ noetic:
     BUILD --pass-args ros1+noetic
 
 
+ros-dev-all:
+    ARG registry='localhost/'
+    ARG image_name='ros-dev'
+    BUILD --pass-args +ros-dev-ubuntu-noble
+    BUILD --pass-args +ros-dev-ubuntu-jammy
+
+
 ros-dev-ubuntu-noble:
     ARG registry='localhost/'
     ARG image_name='ros-dev'
@@ -75,6 +82,13 @@ noetic-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
     BUILD --pass-args --platform=linux/amd64 --platform=linux/arm/v7 --platform=linux/arm64/v8 +noetic
+
+
+ros-dev-all-multiarch:
+    ARG registry='localhost/'
+    ARG image_name='ros-dev'
+    BUILD --pass-args +ros-dev-ubuntu-noble-multiarch
+    BUILD --pass-args +ros-dev-ubuntu-jammy-multiarch
 
 
 ros-dev-ubuntu-noble-multiarch:

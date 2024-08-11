@@ -18,6 +18,4 @@ jobs:
 
       - name: Build Images
         run: |
-          earthly --ci \
-            +ros-dev-ubuntu-noble \
-            +ros-dev-ubuntu-jammy
+          earthly --ci +ros-dev-all

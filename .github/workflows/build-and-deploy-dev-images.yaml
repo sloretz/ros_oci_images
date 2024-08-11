@@ -55,7 +55,6 @@ jobs:
       - name: Build and Push Images
         run: |
           earthly --ci --push \
-            +ros-dev-ubuntu-noble-multiarch \
-            +ros-dev-ubuntu-jammy-multiarch \
+            +ros-dev-all-multiarch \
             --registry=${{ inputs.image_registry }}/ \
             --image_name=${{ inputs.image_name }}
