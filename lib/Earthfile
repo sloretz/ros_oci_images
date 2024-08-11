@@ -4,5 +4,4 @@ SAVE_IMAGE_AND_DATE:
     FUNCTION
     ARG --required fully_qualified_name
     LET date=$(date --utc '+%Y-%m-%d')
-    SAVE IMAGE --push ${fully_qualified_name}
-    SAVE IMAGE --push ${fully_qualified_name}-${date}
+    SAVE IMAGE --push ${fully_qualified_name} ${fully_qualified_name}-${date}
