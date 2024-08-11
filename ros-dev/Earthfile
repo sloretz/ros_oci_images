@@ -14,7 +14,7 @@ ubuntu-jammy:
     ARG image_name='ros-dev'
     ARG registry='localhost/'
     DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:jammy
-    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:ubuntu-noble
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:ubuntu-jammy
 
 
 UBUNTU_DEV_IMAGE:
