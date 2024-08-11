@@ -1,0 +1,94 @@
+VERSION 0.8
+
+IMPORT ../apt AS apt
+
+ubuntu-noble:
+    ARG image_name='ros-dev'
+    ARG registry='localhost/'
+    DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:noble
+    SAVE IMAGE --push ${registry}${image_name}:ubuntu-noble
+
+
+ubuntu-jammy:
+    ARG image_name='ros-dev'
+    ARG registry='localhost/'
+    DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:jammy
+    SAVE IMAGE --push ${registry}${image_name}:ubuntu-jammy
+
+
+UBUNTU_DEV_IMAGE:
+    FUNCTION
+    ARG --required UBUNTU_IMAGE
+    FROM ${UBUNTU_IMAGE}
+
+    # Setup timezone
+    RUN echo 'Etc/UTC' > /etc/timezone && \
+        ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
+    # Install packages
+    DO apt+INSTALL --packages="
+        tzdata
+        dirmngr
+        gnupg2
+        lsb-release
+        sudo"
+
+    # Setup keys
+    RUN set -eux; \
+        key='C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654'; \
+        export GNUPGHOME="$(mktemp -d)"; \
+        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
+        mkdir -p /usr/share/keyrings; \
+        gpg --batch --export "$key" > /usr/share/keyrings/ros2-latest-archive-keyring.gpg; \
+        gpgconf --kill all; \
+        rm -rf "$GNUPGHOME"
+
+    # Setup sources.list
+    RUN echo "deb [ signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg ] http://packages.ros.org/ros2/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros2-latest.list
+    # Setup environment
+    ENV LANG C.UTF-8
+    ENV LC_ALL C.UTF-8
+
+    # Install ROS Developer tools
+    DO apt+INSTALL --packages="
+        python3-pip
+        python3-pytest-cov
+        python3-flake8-blind-except
+        python3-flake8-class-newline
+        python3-flake8-deprecated
+        python3-pytest-repeat
+        python3-pytest-rerunfailures
+        ros-dev-tools
+        python3-colcon-mixin"
+
+    # Bootstrap rosdep
+    RUN rosdep init
+
+    # Create a non-root user
+    # https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+    ARG USERNAME=ros
+    ARG USER_UID=1000
+    ARG USER_GID=$USER_UID
+
+    # Delete ubuntu user if it exists (Ubuntu Noble)
+    RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
+
+    RUN groupadd --gid $USER_GID $USERNAME \
+        && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME  -s `which bash` \
+        && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+        && chmod 0440 /etc/sudoers.d/$USERNAME
+
+    # Set the default user.
+    USER $USERNAME
+
+    # Update rosdep
+    RUN rosdep update
+
+    # Setup colcon mixin and metadata
+    RUN cd /tmp && \
+        colcon mixin add default \
+        https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
+        colcon mixin update && \
+        colcon metadata add default \
+        https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
+        colcon metadata update
