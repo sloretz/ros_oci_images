@@ -71,11 +71,11 @@ Follow these instructions to build ROS from source inside one of these images:
 1. Enter the dev container as described above
 1. Import all the source code using [vsctool](https://github.com/dirk-thomas/vcstool)
     ```bash
-    vcstool import --input ros2.repos src/
+    vcs import --input ros2.repos src/
     ```
 1. Install all system dependencies using [rosdep](https://docs.ros.org/en/rolling/Tutorials/Intermediate/Rosdep.html)
     ```bash
-    apt-get update && \
+    sudo apt-get update && \
     rosdep install -ryi --from-paths src
     ```
     Type `yes` when asked to accept the RTI Connext license.
