@@ -28,5 +28,3 @@ jobs:
 
   call-ci-build-dev-images:
     uses: ./.github/workflows/ci-build-amd64-dev-images.yaml
-    with:
-      ros_distro: rolling
