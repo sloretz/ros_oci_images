@@ -1,6 +1,7 @@
 VERSION 0.8
 
 IMPORT ../apt AS apt
+IMPORT ../lib AS lib
 
 noetic:
     ARG image_name='ros'
@@ -10,39 +11,39 @@ noetic:
 
     # ros-core
     FROM --pass-args +ros-core
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-ros-core
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-ros-core
 
     # ros-base
     FROM --pass-args +ros-base
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-ros-base
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-ros-base
 
     # robot
     FROM --pass-args +robot
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-robot
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-robot
 
     # desktop
     FROM --pass-args +desktop
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-desktop
 
     # perception
     FROM --pass-args +perception
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-perception
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-perception
 
     # viz
     FROM --pass-args +viz
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-viz
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-viz
 
     # simulators
     FROM --pass-args +simulators
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-simulators
 
     # simulators-osrf
     FROM --pass-args +simulators-osrf
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-simulators-osrf
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-simulators-osrf
 
     # desktop-full
     FROM --pass-args +desktop-full
-    SAVE IMAGE --push ${registry}${image_name}:${ROS_DISTRO}-desktop-full
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:${ROS_DISTRO}-desktop-full
 
 
 viz:

@@ -1,19 +1,20 @@
 VERSION 0.8
 
 IMPORT ../apt AS apt
+IMPORT ../lib AS lib
 
 ubuntu-noble:
     ARG image_name='ros-dev'
     ARG registry='localhost/'
     DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:noble
-    SAVE IMAGE --push ${registry}${image_name}:ubuntu-noble
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:ubuntu-noble
 
 
 ubuntu-jammy:
     ARG image_name='ros-dev'
     ARG registry='localhost/'
     DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:jammy
-    SAVE IMAGE --push ${registry}${image_name}:ubuntu-jammy
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:ubuntu-noble
 
 
 UBUNTU_DEV_IMAGE:
