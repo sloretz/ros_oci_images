@@ -93,3 +93,11 @@ UBUNTU_DEV_IMAGE:
         colcon metadata add default \
         https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
         colcon metadata update
+
+    LABEL devcontainer.metadata=" \
+        [ \
+            { \
+                \"remoteUser\": \"ros\", \
+                \"capAdd\": [\"SYS_PTRACE\"] \
+            } \
+        ]"

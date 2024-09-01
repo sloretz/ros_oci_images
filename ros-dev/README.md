@@ -31,9 +31,7 @@ Follow these instructions to create a dev container from one of these images.
 1. Specify the image you want to use in the `devcontainer.json` file using this template.
    ```json
     {
-        "name": "My Dev Container",
-        "image": "ghcr.io/sloretz/ros-dev:ubuntu-noble",
-        "remoteUser": "ros"
+        "image": "ghcr.io/sloretz/ros-dev:ubuntu-noble"
     }
     ```
 1. Open [VS Code](https://code.visualstudio.com/)
@@ -63,9 +61,7 @@ Follow these instructions to build ROS from source inside one of these images:
 1. Specify the image you want to use in the `devcontainer.json` file using this template.
    ```json
     {
-        "name": "ROS Roling from source",
-        "image": "ghcr.io/sloretz/ros-dev:ubuntu-noble",
-        "remoteUser": "ros"
+        "image": "ghcr.io/sloretz/ros-dev:ubuntu-noble"
     }
     ```
 1. Enter the dev container as described above
