@@ -17,12 +17,6 @@ jazzy:
     BUILD --pass-args ros2+jazzy
 
 
-iron:
-    ARG registry='localhost/'
-    ARG image_name='ros'
-    BUILD --pass-args ros2+iron
-
-
 humble:
     ARG registry='localhost/'
     ARG image_name='ros'
@@ -64,12 +58,6 @@ jazzy-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
     BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +jazzy
-
-
-iron-multiarch:
-    ARG registry='localhost/'
-    ARG image_name='ros'
-    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +iron
 
 
 humble-multiarch:

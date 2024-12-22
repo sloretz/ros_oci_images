@@ -10,7 +10,7 @@ These images are updated once per week at midnight GMT on Sunday.
 
 | In-container OS | amd64 | arm v7 | arm64 v8 | Full Image Name                                | ROS distro compatibility |
 |-------------------|-------|--------|----------|------------------------------------------------|--------------------------|
-| Ubuntu Jammy      | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros-dev:ubuntu-jammy`      | Humble, Iron             |
+| Ubuntu Jammy      | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros-dev:ubuntu-jammy`      | Humble                   |
 | Ubuntu Noble      | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros-dev:ubuntu-noble`      | Jazzy, Rolling           |
 
 ## Using a dev container

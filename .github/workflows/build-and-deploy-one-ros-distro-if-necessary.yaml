@@ -9,7 +9,6 @@ on:
         options:
         - noetic
         - humble
-        - iron
         - jazzy
         - rolling
       image_registry:

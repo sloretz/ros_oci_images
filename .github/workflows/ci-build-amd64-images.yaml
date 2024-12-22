@@ -13,10 +13,6 @@ jobs:
     uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
     with:
       ros_distro: humble
-  call-ci-build-iron:
-    uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
-    with:
-      ros_distro: iron
   call-ci-build-jazzy:
     uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
     with:
