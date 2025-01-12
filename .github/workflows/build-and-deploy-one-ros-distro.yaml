@@ -54,14 +54,13 @@ jobs:
           large-packages: true
           docker-images: true
           swap-storage: true
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@53851d14592bedcffcf25ea515637cff71ef929a  # v3.3.0
       - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
         with:
           version: v0.8.0
       - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
-
-      - name: Install dependencies
-        run: ./scripts/install_dependencies.bash
 
       - name: Log in to ghcr.io
         uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
