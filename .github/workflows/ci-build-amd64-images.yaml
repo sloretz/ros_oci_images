@@ -17,6 +17,10 @@ jobs:
     uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
     with:
       ros_distro: jazzy
+  call-ci-build-kilted:
+    uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
+    with:
+      ros_distro: kilted
   call-ci-build-rolling:
     uses: ./.github/workflows/ci-build-amd64-image-one-ros-distro.yaml
     with:
