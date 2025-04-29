@@ -13,6 +13,16 @@ rolling:
         --UBUNTU_IMAGE='ubuntu:noble'
 
 
+kilted:
+    ARG image_name='ros-testing'
+    ARG registry='localhost/'
+    DO +ROS_BINARY_IMAGES \
+        --registry=$registry \
+        --image_name=$image_name \
+        --ROS_DISTRO='kilted' \
+        --UBUNTU_IMAGE='ubuntu:noble' \
+        --use_testing_repo='true'
+
 jazzy:
     ARG image_name='ros'
     ARG registry='localhost/'
@@ -39,6 +49,7 @@ ROS_BINARY_IMAGES:
     ARG --required registry
     ARG --required ROS_DISTRO
     ARG --required UBUNTU_IMAGE
+    ARG use_testing_repo=false
 
     # ros-core
     FROM --pass-args +ros-core
@@ -68,6 +79,7 @@ ROS_BINARY_IMAGES:
 ros-core:
     ARG UBUNTU_IMAGE
     ARG ROS_DISTRO
+    ARG use_testing_repo
 
     FROM $UBUNTU_IMAGE
 
@@ -93,7 +105,11 @@ ros-core:
         rm -rf "$GNUPGHOME"
 
     # Setup sources.list
-    RUN echo "deb [ signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg ] http://packages.ros.org/ros2/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros2-latest.list
+    IF [ ${use_testing_repo} = 'true' ]
+        RUN echo "deb [ signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg ] http://packages.ros.org/ros2-testing/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros2-testing.list
+    ELSE
+        RUN echo "deb [ signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg ] http://packages.ros.org/ros2/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros2-latest.list
+    END
     # Setup environment
     ENV LANG C.UTF-8
     ENV LC_ALL C.UTF-8

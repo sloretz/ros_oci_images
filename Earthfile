@@ -11,6 +11,11 @@ rolling:
     BUILD --pass-args ros2+rolling
 
 
+kilted:
+    ARG registry='localhost/'
+    ARG image_name='ros-testing'
+    BUILD --pass-args ros2+kilted
+
 jazzy:
     ARG registry='localhost/'
     ARG image_name='ros'
@@ -52,6 +57,12 @@ rolling-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
     BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +rolling
+
+
+kilted-multiarch:
+    ARG registry='localhost/'
+    ARG image_name='ros-testing'
+    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +kilted
 
 
 jazzy-multiarch:
