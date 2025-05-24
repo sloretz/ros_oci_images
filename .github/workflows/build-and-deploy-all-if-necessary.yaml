@@ -27,7 +27,7 @@ jobs:
     uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
     with:
       ros_distro: kilted
-      image_name: ros-testing
+      image_name: ros
   call-build-and-deploy-rolling:
     uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
     with:

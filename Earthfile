@@ -13,7 +13,7 @@ rolling:
 
 kilted:
     ARG registry='localhost/'
-    ARG image_name='ros-testing'
+    ARG image_name='ros'
     BUILD --pass-args ros2+kilted
 
 jazzy:
@@ -61,7 +61,7 @@ rolling-multiarch:
 
 kilted-multiarch:
     ARG registry='localhost/'
-    ARG image_name='ros-testing'
+    ARG image_name='ros'
     BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +kilted
 
 
