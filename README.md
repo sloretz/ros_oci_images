@@ -42,6 +42,13 @@ All images are based on Ubuntu.
 | perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-perception`      |
 | simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-simulation`      |
 | desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop-full`    |
+| [ROS Kilted](http://docs.ros.org/en/kilted)                                               |
+| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-ros-core`      |
+| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-ros-base`      |
+| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-desktop`       |
+| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-perception`    |
+| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-simulation`    |
+| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-desktop-full`  |
 | [ROS Rolling](http://docs.ros.org/en/rolling)                                               |
 | ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-ros-core`     |
 | ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-ros-base`     |
@@ -62,25 +69,6 @@ All images are based on Ubuntu.
 
 
 simulators-osrf image contains the same packages as simulators, but updated to versions provided by packages.osrfoundation.org (PPA suggested by Gazebo).
-
-### ROS Kilted testing images
-
-If you're participating in the [ROS Kilted tutorial party](https://discourse.ros.org/t/kilted-test-and-tutorial-party-and-release-events/43386), use the `desktop` or `desktop-full` images:
-
-```
-docker run --rm=true -ti ghcr.io/sloretz/ros-testing:kilted-desktop ros2 --help
-```
-
-| Image           | amd64 | arm v7 | arm64 v8 | Full Image Name                            |
-|-----------------|-------|--------|----------|--------------------------------------------|
-| [ROS Kilted](http://docs.ros.org/en/kilted) (Testing)                                               |
-| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros-testing:kilted-ros-core`      |
-| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros-testing:kilted-ros-base`      |
-| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros-testing:kilted-desktop`       |
-| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros-testing:kilted-perception`    |
-| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros-testing:kilted-simulation`    |
-| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros-testing:kilted-desktop-full`  |
-
 
 ## Using with other OCI compatible tools
 
