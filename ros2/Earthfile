@@ -14,14 +14,13 @@ rolling:
 
 
 kilted:
-    ARG image_name='ros-testing'
+    ARG image_name='ros'
     ARG registry='localhost/'
     DO +ROS_BINARY_IMAGES \
         --registry=$registry \
         --image_name=$image_name \
         --ROS_DISTRO='kilted' \
-        --UBUNTU_IMAGE='ubuntu:noble' \
-        --use_testing_repo='true'
+        --UBUNTU_IMAGE='ubuntu:noble'
 
 jazzy:
     ARG image_name='ros'
