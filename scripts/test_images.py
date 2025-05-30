@@ -76,67 +76,27 @@ def main():
     armhf = "linux/arm/v7"
     arm64 = "linux/arm64/v8"
 
-    if "noetic" == ros_distro:
-        # ROS 1
-        combos = [
-            ("ros-core", amd64),
-            ("ros-base", amd64),
-            ("desktop", amd64),
-            ("perception", amd64),
-            ("simulators", amd64),
-            ("simulators-osrf", amd64),
-            ("desktop-full", amd64),
-            ("robot", amd64),
-            ("viz", amd64),
-            ("ros-core", armhf),
-            ("ros-base", armhf),
-            ("desktop", armhf),
-            ("perception", armhf),
-            # ("simulators", armhf),
-            # ("simulators-osrf", armhf),
-            # ("desktop-full", armhf),
-            ("robot", armhf),
-            ("viz", armhf),
-            ("ros-core", arm64),
-            ("ros-base", arm64),
-            ("desktop", arm64),
-            ("perception", arm64),
-            ("simulators", arm64),
-            ("simulators-osrf", arm64),
-            ("desktop-full", arm64),
-            ("robot", arm64),
-            ("viz", arm64),
-        ]
-        for image, platform in combos:
-            metapackage = "simulators" if image == "simulators-osrf" else image
-            tag = f"{ros_distro}-{metapackage}"
-            package = f"ros-{ros_distro}-{metapackage}"
-            full_name = _full_name(args.registry, args.name, tag)
-            _pull(full_name, dry_run)
-            _print_pkg_version(full_name, package, platform, args.dry_run)
-    else:
-        # ROS 2
-        combos = [
-            ("ros-core", amd64),
-            ("ros-base", amd64),
-            ("desktop", amd64),
-            ("perception", amd64),
-            ("simulation", amd64),
-            ("desktop-full", amd64),
-            ("ros-core", arm64),
-            ("ros-base", arm64),
-            ("desktop", arm64),
-            ("perception", arm64),
-            ("simulation", arm64),
-            ("desktop-full", arm64),
-        ]
-        for image, platform in combos:
-            tag = f"{ros_distro}-{image}"
-            package = f"ros-{ros_distro}-{image}"
-            full_name = _full_name(args.registry, args.name, tag)
-            _pull(full_name, dry_run)
-            _print_pkg_version(full_name, package, platform, args.dry_run)
-            _print_ros2_help(full_name, platform, dry_run)
+    combos = [
+        ("ros-core", amd64),
+        ("ros-base", amd64),
+        ("desktop", amd64),
+        ("perception", amd64),
+        ("simulation", amd64),
+        ("desktop-full", amd64),
+        ("ros-core", arm64),
+        ("ros-base", arm64),
+        ("desktop", arm64),
+        ("perception", arm64),
+        ("simulation", arm64),
+        ("desktop-full", arm64),
+    ]
+    for image, platform in combos:
+        tag = f"{ros_distro}-{image}"
+        package = f"ros-{ros_distro}-{image}"
+        full_name = _full_name(args.registry, args.name, tag)
+        _pull(full_name, dry_run)
+        _print_pkg_version(full_name, package, platform, args.dry_run)
+        _print_ros2_help(full_name, platform, dry_run)
 
 
 if __name__ == "__main__":

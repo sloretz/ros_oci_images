@@ -1,6 +1,5 @@
 VERSION 0.8
 
-IMPORT ./ros1 AS ros1
 IMPORT ./ros2 AS ros2
 IMPORT ./ros-dev AS ros-dev
 
@@ -26,12 +25,6 @@ humble:
     ARG registry='localhost/'
     ARG image_name='ros'
     BUILD --pass-args ros2+humble
-
-
-noetic:
-    ARG registry='localhost/'
-    ARG image_name='ros'
-    BUILD --pass-args ros1+noetic
 
 
 ros-dev-all:
@@ -75,12 +68,6 @@ humble-multiarch:
     ARG registry='localhost/'
     ARG image_name='ros'
     BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +humble
-
-
-noetic-multiarch:
-    ARG registry='localhost/'
-    ARG image_name='ros'
-    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm/v7 --platform=linux/arm64/v8 +noetic
 
 
 ros-dev-all-multiarch:

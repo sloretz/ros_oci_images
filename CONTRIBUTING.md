@@ -46,18 +46,14 @@ The top-level Earthfile defines what platforms each ROS distro's images are buil
 
 #### The ros1 and ros2 folders
 
-The `ros1` and `ros2` folders each have an Earthfile used to create images with ROS 1 and ROS 2 installed from debian packages, respectively.
-The ROS 1 images definitions were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/noetic/ubuntu/focal), and the ROS 2 definitions  were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/rolling/ubuntu/jammy).
+The `ros2` folder has an Earthfile used to create images with ROS 2 installed from debian packages.
+The ROS 2 definitions  were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/rolling/ubuntu/jammy).
 The Earthfiles don't need to match the Dockerfiles in [osrf/docker_images](https://github.com/osrf/docker_images), but they should stay close.
 
-* `ros1/Earthfile` defines a target for ROS Noetic calle `noetic`.
-    That target builds an OCI image for each [metapackage defined by REP 142](https://www.ros.org/reps/rep-0142.html) plus `simulators-osrf`.
 *  `ros2/Earthfile` defines a target for each active ROS 2 distro.
     Each target creates an OCI image for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
 
 If you think there should be a new folder in `ros2` (ex: a navigation image with Nav2, or a moveit2 image) then please [propose a new variant to REP 2001 first](https://github.com/ros-infrastructure/rep/blob/master/rep-2001.rst) as a pull request to the [ros-infrastructure/rep repo](https://github.com/ros-infrastructure/rep).
-If you think there should be a new ROS 1 image, I would suggest not creating one.
-[ROS 1 is nearly end of life](https://endoflife.date/ros).
 
 #### The apt folder
 

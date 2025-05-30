@@ -5,10 +5,6 @@ on:
 
 jobs:
 
-  call-ci-test-noetic:
-    uses: ./.github/workflows/test-deployed-images-one-ros-distro.yaml
-    with:
-      ros_distro: noetic
   call-ci-build-rolling:
     uses: ./.github/workflows/test-deployed-images-one-ros-distro.yaml
     with:
