@@ -11,10 +11,6 @@ permissions:
 
 jobs:
 
-  call-build-and-deploy-noetic:
-    uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
-    with:
-      ros_distro: noetic
   call-build-and-deploy-humble:
     uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
     with:

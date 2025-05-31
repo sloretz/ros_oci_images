@@ -23,52 +23,38 @@ All images are updated once per week at midnight GMT on Sunday.
 Additionally each ROS distro's images are updated automatically after a sync.
 
 The ROS 2 distros have an image for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
-The ROS 1 distro [ROS Noetic](https://wiki.ros.org/noetic) has an image for each [metapackage defined by REP 142](https://www.ros.org/reps/rep-0142.html).
 All images are based on Ubuntu.
 
-| Image           | amd64 | arm v7 | arm64 v8 | Full Image Name                            |
-|-----------------|-------|--------|----------|--------------------------------------------|
-| [ROS Humble](http://docs.ros.org/en/humble)                                                 |
-| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:humble-ros-core`      |
-| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:humble-ros-base`      |
-| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:humble-desktop`       |
-| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:humble-perception`    |
-| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:humble-simulation`    |
-| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:humble-desktop-full`  |
-| [ROS Jazzy](http://docs.ros.org/en/jazzy)                                                     |
-| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-ros-core`        |
-| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-ros-base`        |
-| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop`         |
-| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-perception`      |
-| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-simulation`      |
-| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop-full`    |
-| [ROS Kilted](http://docs.ros.org/en/kilted)                                               |
-| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-ros-core`      |
-| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-ros-base`      |
-| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-desktop`       |
-| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-perception`    |
-| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-simulation`    |
-| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:kilted-desktop-full`  |
-| [ROS Rolling](http://docs.ros.org/en/rolling)                                               |
-| ros-core        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-ros-core`     |
-| ros-base        | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-ros-base`     |
-| desktop         | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-desktop`      |
-| perception      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-perception`   |
-| simulation      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-simulation`   |
-| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:rolling-desktop-full` |
-| [ROS Noetic](https://wiki.ros.org/noetic)                                                   |
-| ros-core        | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-ros-core`      |
-| ros-base        | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-ros-base`      |
-| desktop         | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-desktop`       |
-| perception      | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-perception`    |
-| simulators      | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-simulators`    |
-| simulators-osrf | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-simulators-osrf`|
-| desktop-full    | ✅     | ❌      | ✅        | `ghcr.io/sloretz/ros:noetic-desktop-full`  |
-| robot           | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-robot`         |
-| viz             | ✅     | ✅      | ✅        | `ghcr.io/sloretz/ros:noetic-viz`           |
-
-
-simulators-osrf image contains the same packages as simulators, but updated to versions provided by packages.osrfoundation.org (PPA suggested by Gazebo).
+| Image           | amd64 | arm64 v8 | Full Image Name                            |
+|-----------------|-------|----------|--------------------------------------------|
+| [ROS Humble](http://docs.ros.org/en/humble)                                        |
+| ros-core        | ✅     | ✅        | `ghcr.io/sloretz/ros:humble-ros-core`      |
+| ros-base        | ✅     | ✅        | `ghcr.io/sloretz/ros:humble-ros-base`      |
+| desktop         | ✅     | ✅        | `ghcr.io/sloretz/ros:humble-desktop`       |
+| perception      | ✅     | ✅        | `ghcr.io/sloretz/ros:humble-perception`    |
+| simulation      | ✅     | ✅        | `ghcr.io/sloretz/ros:humble-simulation`    |
+| desktop-full    | ✅     | ✅        | `ghcr.io/sloretz/ros:humble-desktop-full`  |
+| [ROS Jazzy](http://docs.ros.org/en/jazzy)                                            |
+| ros-core        | ✅     | ✅        | `ghcr.io/sloretz/ros:jazzy-ros-core`        |
+| ros-base        | ✅     | ✅        | `ghcr.io/sloretz/ros:jazzy-ros-base`        |
+| desktop         | ✅     | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop`         |
+| perception      | ✅     | ✅        | `ghcr.io/sloretz/ros:jazzy-perception`      |
+| simulation      | ✅     | ✅        | `ghcr.io/sloretz/ros:jazzy-simulation`      |
+| desktop-full    | ✅     | ✅        | `ghcr.io/sloretz/ros:jazzy-desktop-full`    |
+| [ROS Kilted](http://docs.ros.org/en/kilted)                                      |
+| ros-core        | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-ros-core`      |
+| ros-base        | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-ros-base`      |
+| desktop         | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-desktop`       |
+| perception      | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-perception`    |
+| simulation      | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-simulation`    |
+| desktop-full    | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-desktop-full`  |
+| [ROS Rolling](http://docs.ros.org/en/rolling)                                      |
+| ros-core        | ✅     | ✅        | `ghcr.io/sloretz/ros:rolling-ros-core`     |
+| ros-base        | ✅     | ✅        | `ghcr.io/sloretz/ros:rolling-ros-base`     |
+| desktop         | ✅     | ✅        | `ghcr.io/sloretz/ros:rolling-desktop`      |
+| perception      | ✅     | ✅        | `ghcr.io/sloretz/ros:rolling-perception`   |
+| simulation      | ✅     | ✅        | `ghcr.io/sloretz/ros:rolling-simulation`   |
+| desktop-full    | ✅     | ✅        | `ghcr.io/sloretz/ros:rolling-desktop-full` |
 
 ## Using with other OCI compatible tools
 
