@@ -88,27 +88,21 @@ ros-core:
 
     # Install packages
     DO apt+INSTALL --packages="
-        tzdata
-        dirmngr
-        gnupg2
+        curl
+        jq
         lsb-release"
 
-    # Setup keys
+    # Setup keys and apt sources
     RUN set -eux; \
-        key='C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654'; \
-        export GNUPGHOME="$(mktemp -d)"; \
-        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
-        mkdir -p /usr/share/keyrings; \
-        gpg --batch --export "$key" > /usr/share/keyrings/ros2-latest-archive-keyring.gpg; \
-        gpgconf --kill all; \
-        rm -rf "$GNUPGHOME"
+        export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | jq -r ".tag_name"); \
+        if [ "${use_testing_repo}" = "true" ]; then \
+            curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-testing-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
+        else \
+            curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
+        fi \
+        apt install /tmp/ros2-apt-source.deb; \
+        rm /tmp/ros2-apt-source.deb
 
-    # Setup sources.list
-    IF [ ${use_testing_repo} = 'true' ]
-        RUN echo "deb [ signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg ] http://packages.ros.org/ros2-testing/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros2-testing.list
-    ELSE
-        RUN echo "deb [ signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg ] http://packages.ros.org/ros2/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros2-latest.list
-    END
     # Setup environment
     ENV LANG C.UTF-8
     ENV LC_ALL C.UTF-8
