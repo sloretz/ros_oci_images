@@ -28,6 +28,7 @@ UBUNTU_DEV_IMAGE:
 
     # Install packages
     DO apt+INSTALL --packages="
+        ca-certificates
         curl
         jq
         lsb-release
