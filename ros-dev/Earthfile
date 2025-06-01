@@ -30,7 +30,8 @@ UBUNTU_DEV_IMAGE:
     DO apt+INSTALL --packages="
         curl
         jq
-        lsb-release"
+        lsb-release
+        sudo"
 
     # Setup keys and apt sources
     RUN set -eux; \
