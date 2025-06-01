@@ -88,6 +88,7 @@ ros-core:
 
     # Install packages
     DO apt+INSTALL --packages="
+        ca-certificates
         curl
         jq
         lsb-release"
@@ -99,7 +100,7 @@ ros-core:
             curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-testing-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
         else \
             curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
-        fi \
+        fi ; \
         apt install /tmp/ros2-apt-source.deb; \
         rm /tmp/ros2-apt-source.deb
 
