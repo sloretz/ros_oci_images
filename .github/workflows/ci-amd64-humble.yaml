@@ -1,0 +1,17 @@
+name: CI ROS Humble AMD64
+
+on:
+  pull_request:
+
+jobs:
+  ci-build-amd64-image:
+    name: CI ROS Humble AMD64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
+        with:
+          version: v0.8.0
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+      - name: Build Images
+        run: earthly --ci +humble

@@ -1,17 +1,12 @@
-name: CI Build AMD64 Images For One ROS Distro
+name: CI ROS Rolling AMD64
 
 on:
-  workflow_call:
-    inputs:
-      ros_distro:
-        description: ROS Distro to build
-        type: string
-        required: true
+  pull_request:
 
 jobs:
 
   ci-build-amd64-image:
-    name: CI Build AMD64 Images For One ROS Distro
+    name: CI ROS Rolling AMD64
     runs-on: ubuntu-latest
     steps:
       - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
@@ -21,4 +16,4 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
       - name: Build Images
-        run: earthly --ci +"${{ inputs.ros_distro }}"
+        run: earthly --ci +rolling
