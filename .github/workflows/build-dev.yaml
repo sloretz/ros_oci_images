@@ -1,4 +1,4 @@
-name: Build and Deploy Dev Container Images
+name: Build Dev Container Images
 
 on:
   workflow_dispatch:
@@ -11,6 +11,12 @@ on:
         description: The name of the image
         default: "ros-dev"
         type: string
+      earthly_target:
+        type: choice
+        options:
+          - "+ros-dev-ubuntu-noble-multiarch"
+          - "+ros-dev-ubuntu-jammy-multiarch"
+        description: The earthly target to build including a '+' sign at the start.
   workflow_call:
     inputs:
       image_registry:
@@ -21,6 +27,9 @@ on:
         description: The name of the image
         default: "ros-dev"
         type: string
+      earthly_target:
+        description: The earthly target to build including a '+' sign at the start.
+        required: true
 
 permissions:
       packages: write
@@ -55,6 +64,6 @@ jobs:
       - name: Build and Push Images
         run: |
           earthly --ci --push \
-            +ros-dev-all-multiarch \
+            ${{ inputs.earthly_target }} \
             --registry=${{ inputs.image_registry }}/ \
             --image_name=${{ inputs.image_name }}

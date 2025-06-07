@@ -1,9 +1,9 @@
-name: ROS Humble Build If Necessary
+name: ROS Humble Build
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '15 */6 * * *'  # Every 6 hours.
+    - cron: '0 0 * * SUN'  # 00:00 on Sunday.
 
 permissions:
       packages: write
@@ -11,6 +11,6 @@ permissions:
 
 jobs:
   build-and-deploy-humble:
-    uses: ./.github/workflows/build-one-ros-distro-if-necessary.yaml
+    uses: ./.github/workflows/build-one-ros-distro.yaml
     with:
       ros_distro: humble
