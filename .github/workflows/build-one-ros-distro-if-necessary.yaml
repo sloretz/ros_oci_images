@@ -1,16 +1,12 @@
-name: Build and Deploy One ROS Distro If Necessary
+name: Build One ROS Distro If Necessary
 
 on:
   workflow_dispatch:
     inputs:
       ros_distro:
-        type: choice
+        type: string
         description: ROS Distro to build
-        options:
-        - humble
-        - jazzy
-        - kilted
-        - rolling
+        default: "rolling"
       image_registry:
         description: The container registry to push to (must be ghcr.io)
         default: "ghcr.io/sloretz"
