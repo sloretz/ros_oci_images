@@ -56,7 +56,7 @@ jobs:
   call-build-and-deploy:
     needs: check_for_update
     if: needs.check_for_update.outputs.needs_update == 'YES'
-    uses: ./.github/workflows/build-and-deploy-one-ros-distro.yaml
+    uses: ./.github/workflows/build-one-ros-distro.yaml
     with:
       ros_distro: ${{ inputs.ros_distro }}
       image_registry: ${{ inputs.image_registry }}
