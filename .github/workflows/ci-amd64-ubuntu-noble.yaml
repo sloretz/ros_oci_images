@@ -1,13 +1,11 @@
-name: CI Build AMD64 Dev Container Images
+name: CI AMD64 Dev Container (Ubuntu Noble)
 
 on:
   workflow_call:
 
-
 jobs:
-
-  ci-build-amd64-dev-image:
-    name: CI Build AMD64 Dev Container Images
+  ci-build-amd64-dev-image-noble:
+    name: CI AMD64 Dev Container (Ubuntu Noble)
     runs-on: ubuntu-latest
     steps:
       - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
@@ -15,7 +13,6 @@ jobs:
           version: v0.8.0
       - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
-
-      - name: Build Images
+      - name: Build Image
         run: |
-          earthly --ci +ros-dev-all
+          earthly --ci +ros-dev-ubuntu-noble
