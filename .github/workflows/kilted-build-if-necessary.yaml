@@ -1,0 +1,16 @@
+name: ROS Kilted Build If Necessary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 */6 * * *'  # Every 6 hours.
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+  build-and-deploy-kilted:
+    uses: ./.github/workflows/build-one-ros-distro-if-necessary.yaml
+    with:
+      ros_distro: kilted

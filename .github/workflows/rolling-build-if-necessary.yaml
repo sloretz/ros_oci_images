@@ -1,0 +1,16 @@
+name: ROS Rolling Build If Necessary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours.
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+  build-and-deploy-rolling:
+    uses: ./.github/workflows/build-one-ros-distro-if-necessary.yaml
+    with:
+      ros_distro: rolling

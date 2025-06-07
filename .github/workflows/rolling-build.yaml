@@ -1,0 +1,16 @@
+name: ROS Rolling Build
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * SUN'  # 00:00 on Sunday.
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+  build-and-deploy-rolling:
+    uses: ./.github/workflows/build-one-ros-distro.yaml
+    with:
+      ros_distro: rolling

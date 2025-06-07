@@ -1,0 +1,16 @@
+name: Build Dev Ubuntu Noble
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * SUN'  # 00:00 on Sunday.
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+  build-dev-ubuntu-noble:
+    uses: ./.github/workflows/build-dev.yaml
+    with:
+      earthly_target: +ros-dev-ubuntu-noble

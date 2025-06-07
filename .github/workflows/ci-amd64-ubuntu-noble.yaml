@@ -1,0 +1,22 @@
+name: CI AMD64 Dev Container (Ubuntu Noble)
+
+on:
+  pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci-build-amd64-dev-image-noble:
+    name: CI AMD64 Dev Container (Ubuntu Noble)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
+        with:
+          version: v0.8.0
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+      - name: Build Image
+        run: |
+          earthly --ci +ros-dev-ubuntu-noble
