@@ -1,7 +1,11 @@
 name: CI AMD64 Dev Container (Ubuntu Noble)
 
 on:
-  pull_request:
+  pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci-build-amd64-dev-image-noble:

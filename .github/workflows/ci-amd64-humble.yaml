@@ -1,7 +1,11 @@
 name: CI ROS Humble AMD64
 
 on:
-  pull_request:
+  pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci-build-amd64-image:

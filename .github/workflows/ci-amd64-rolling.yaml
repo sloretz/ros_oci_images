@@ -1,7 +1,11 @@
 name: CI ROS Rolling AMD64
 
 on:
-  pull_request:
+  pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
 
