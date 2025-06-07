@@ -1,0 +1,16 @@
+name: ROS Jazzy Build If Necessary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 */6 * * *'  # Every 6 hours.
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+  build-and-deploy-jazzy:
+    uses: ./.github/workflows/build-and-deploy-one-ros-distro-if-necessary.yaml
+    with:
+      ros_distro: jazzy
