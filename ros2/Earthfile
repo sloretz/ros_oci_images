@@ -95,11 +95,11 @@ ros-core:
 
     # Setup keys and apt sources
     RUN set -eux; \
-        export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | jq -r ".tag_name"); \
+        export ROS_APT_SOURCE_VERSION=$(curl --retry 5 -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | jq -r ".tag_name"); \
         if [ "${use_testing_repo}" = "true" ]; then \
-            curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-testing-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
+            curl --retry 5 -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-testing-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
         else \
-            curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
+            curl --retry 5 -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
         fi ; \
         apt install /tmp/ros2-apt-source.deb; \
         rm /tmp/ros2-apt-source.deb
