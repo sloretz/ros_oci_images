@@ -30,6 +30,7 @@ on:
       earthly_target:
         description: The earthly target to build including a '+' sign at the start.
         required: true
+        type: string
 
 permissions:
       packages: write
