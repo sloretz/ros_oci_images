@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
-      - name: Download actionlint
+      - name: Download and run actionlint
         id: get_actionlint
         run: |
           # Download and verify actionlint binary
@@ -17,8 +17,7 @@ jobs:
           
           # Extract the binary
           tar -xzf actionlint_1.7.7_linux_amd64.tar.gz
-          echo "executable=`pwd`/actionlint_1.7.7_linux_amd64/actionlint" >> $GITHUB_OUTPUT
-        shell: bash
-      - name: Check workflow files
-        run: ${{ steps.get_actionlint.outputs.executable }} -color
+
+          # Run the binary
+          ./actionlint -color
         shell: bash
