@@ -50,7 +50,7 @@ jobs:
         run: |
           apt-get update
           result=$(./scripts/is_new_version_available.py --apt-package "ros-${{ inputs.ros_distro }}-desktop-full")
-          echo ${result}
+          echo "${result}"
           echo "needs_update=${result}" >> "${GITHUB_OUTPUT}"
 
   call-build-and-deploy:
