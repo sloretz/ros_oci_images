@@ -1,0 +1,24 @@
+name: CI Lint GitHub Actions workflows
+on:
+  pull_request
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+      - name: Download actionlint
+        id: get_actionlint
+        run: |
+          # Download and verify actionlint binary
+          set -e
+          curl -o actionlint.tar.gz https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz
+          echo '023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757  actionlint_1.7.7_linux_amd64.tar.gz' | sha256sum --check
+          
+          # Extract the binary
+          tar -xzf actionlint.tar.gz
+          echo "executable=`pwd`/actionlint_1.7.7_linux_amd64/actionlint" >> $GITHUB_OUTPUT
+        shell: bash
+      - name: Check workflow files
+        run: ${{ steps.get_actionlint.outputs.executable }} -color
+        shell: bash
