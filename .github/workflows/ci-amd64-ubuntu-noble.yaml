@@ -1,7 +1,7 @@
 name: CI AMD64 Dev Container (Ubuntu Noble)
 
 on:
-  workflow_call:
+  pull_request:
 
 jobs:
   ci-build-amd64-dev-image-noble:
