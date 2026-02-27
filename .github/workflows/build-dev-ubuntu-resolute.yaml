@@ -1,0 +1,17 @@
+name: Build Dev Ubuntu Resolute
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Every day at 00:00 while resolute is under heavy development
+    # - cron: '0 0 * * SUN'  # 00:00 on Sunday.
+
+permissions:
+      packages: write
+      contents: read
+
+jobs:
+  build-dev-ubuntu-resolute:
+    uses: ./.github/workflows/build-dev.yaml
+    with:
+      earthly_target: +ros-dev-ubuntu-resolute

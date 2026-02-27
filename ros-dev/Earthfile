@@ -3,6 +3,12 @@ VERSION 0.8
 IMPORT ../apt AS apt
 IMPORT ../lib AS lib
 
+ubuntu-resolute:
+    ARG image_name='ros-dev'
+    ARG registry='localhost/'
+    DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:resolute
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:ubuntu-resolute
+
 ubuntu-noble:
     ARG image_name='ros-dev'
     ARG registry='localhost/'

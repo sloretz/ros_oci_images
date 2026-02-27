@@ -26,6 +26,10 @@ humble:
     ARG image_name='ros'
     BUILD --pass-args ros2+humble
 
+ros-dev-ubuntu-resolute:
+    ARG registry='localhost/'
+    ARG image_name='ros-dev'
+    BUILD --pass-args ros-dev+ubuntu-resolute
 
 ros-dev-ubuntu-noble:
     ARG registry='localhost/'
@@ -62,6 +66,10 @@ humble-multiarch:
     ARG image_name='ros'
     BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +humble
 
+ros-dev-ubuntu-resolute-multiarch:
+    ARG registry='localhost/'
+    ARG image_name='ros-dev'
+    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm/v7 --platform=linux/arm64/v8 +ros-dev-ubuntu-resolute
 
 ros-dev-ubuntu-noble-multiarch:
     ARG registry='localhost/'
