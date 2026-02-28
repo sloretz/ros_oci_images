@@ -96,7 +96,7 @@ UBUNTU_DEV_IMAGE:
 
     IF [ "$bootstrap" = "pip" ]
         RUN set -eux; \
-            pip install --user \
+            pip install --user --break-system-packages \
                 bloom \
                 colcon-common-extensions \
                 colcon-mixin \
