@@ -44,15 +44,15 @@ UBUNTU_DEV_IMAGE:
 
     # Setup keys and apt sources
     IF [ "$bootstrap" = "apt" ]
-    RUN set -eux; \
-        export ROS_APT_SOURCE_VERSION=$(curl --retry 5 -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | jq -r ".tag_name"); \
-        curl --retry 5 -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
-        apt install /tmp/ros2-apt-source.deb; \
-        rm /tmp/ros2-apt-source.deb
+        RUN set -eux; \
+            export ROS_APT_SOURCE_VERSION=$(curl --retry 5 -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | jq -r ".tag_name"); \
+            curl --retry 5 -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
+            apt install /tmp/ros2-apt-source.deb; \
+            rm /tmp/ros2-apt-source.deb
     ELSE
-    RUN set -eux; \
-        curl --retry 5 -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg ; \
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+        RUN set -eux; \
+            curl --retry 5 -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg ; \
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
     END
 
     # Setup environment
@@ -61,17 +61,21 @@ UBUNTU_DEV_IMAGE:
 
     # Install ROS Developer tools
     IF [ "$bootstrap" = "apt" ]
-    DO apt+INSTALL --packages="
-        python3-pip
-        python3-pytest-cov
-        python3-flake8-blind-except
-        python3-flake8-class-newline
-        python3-flake8-deprecated
-        python3-pytest-repeat
-        python3-pytest-rerunfailures
-        ros-dev-tools
-        python3-colcon-mixin"
+        DO apt+INSTALL --packages="
+            python3-pip
+            python3-pytest-cov
+            python3-flake8-blind-except
+            python3-flake8-class-newline
+            python3-flake8-deprecated
+            python3-pytest-repeat
+            python3-pytest-rerunfailures
+            ros-dev-tools
+            python3-colcon-mixin"
     END
+    IF [ "$bootstrap" = "pip" ]
+        DO apt+INSTALL --packages="python3-pip"
+    END
+
 
     # Create a non-root user
     # https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
@@ -91,14 +95,13 @@ UBUNTU_DEV_IMAGE:
     USER $USERNAME
 
     IF [ "$bootstrap" = "pip" ]
-    DO apt+INSTALL --packages="python3-pip"
-    RUN set -eux; \
-        pip install --user \
-            bloom \
-            colcon-common-extensions \
-            colcon-mixin \
-            rosdep \
-            vcs2l
+        RUN set -eux; \
+            pip install --user \
+                bloom \
+                colcon-common-extensions \
+                colcon-mixin \
+                rosdep \
+                vcs2l
     END
 
     # Bootstrap rosdep
