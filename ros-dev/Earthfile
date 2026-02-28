@@ -6,7 +6,8 @@ IMPORT ../lib AS lib
 ubuntu-resolute:
     ARG image_name='ros-dev'
     ARG registry='localhost/'
-    DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:resolute
+    # TODO use ros-apt-source package when available
+    DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:resolute --MANUAL_ROS_APT_KEY=true
     DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:ubuntu-resolute
 
 ubuntu-noble:
@@ -26,6 +27,7 @@ ubuntu-jammy:
 UBUNTU_DEV_IMAGE:
     FUNCTION
     ARG --required UBUNTU_IMAGE
+    ARG MANUAL_ROS_APT_KEY=false
     FROM ${UBUNTU_IMAGE}
 
     # Setup timezone
@@ -41,11 +43,17 @@ UBUNTU_DEV_IMAGE:
         sudo"
 
     # Setup keys and apt sources
+    IF [ "$MANUAL_ROS_APT_KEY" = "true" ]
+        RUN set -eux; \
+        curl --retry 5 -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+    ELSE
     RUN set -eux; \
         export ROS_APT_SOURCE_VERSION=$(curl --retry 5 -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | jq -r ".tag_name"); \
         curl --retry 5 -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
         apt install /tmp/ros2-apt-source.deb; \
         rm /tmp/ros2-apt-source.deb
+    END
 
     # Setup environment
     ENV LANG C.UTF-8
