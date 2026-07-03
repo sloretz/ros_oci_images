@@ -6,7 +6,6 @@ IMPORT ../lib AS lib
 ubuntu-resolute:
     ARG image_name='ros-dev'
     ARG registry='localhost/'
-    # TODO use ros-apt-source package when available
     DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:resolute
     DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:ubuntu-resolute
 
