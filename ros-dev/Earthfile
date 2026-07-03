@@ -3,6 +3,12 @@ VERSION 0.8
 IMPORT ../apt AS apt
 IMPORT ../lib AS lib
 
+ubuntu-resolute:
+    ARG image_name='ros-dev'
+    ARG registry='localhost/'
+    DO +UBUNTU_DEV_IMAGE --UBUNTU_IMAGE=ubuntu:resolute
+    DO lib+SAVE_IMAGE_AND_DATE --fully_qualified_name=${registry}${image_name}:ubuntu-resolute
+
 ubuntu-noble:
     ARG image_name='ros-dev'
     ARG registry='localhost/'
@@ -57,9 +63,6 @@ UBUNTU_DEV_IMAGE:
         ros-dev-tools
         python3-colcon-mixin"
 
-    # Bootstrap rosdep
-    RUN rosdep init
-
     # Create a non-root user
     # https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
     ARG USERNAME=ros
@@ -77,7 +80,8 @@ UBUNTU_DEV_IMAGE:
     # Set the default user.
     USER $USERNAME
 
-    # Update rosdep
+    # Bootstrap rosdep
+    RUN sudo --preserve-env rosdep init
     RUN rosdep update
 
     # Setup colcon mixin and metadata

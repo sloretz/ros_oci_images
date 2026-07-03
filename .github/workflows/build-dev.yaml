@@ -14,6 +14,7 @@ on:
       earthly_target:
         type: choice
         options:
+          - "+ros-dev-ubuntu-resolute-multiarch"
           - "+ros-dev-ubuntu-noble-multiarch"
           - "+ros-dev-ubuntu-jammy-multiarch"
         description: The earthly target to build including a '+' sign at the start.
