@@ -3,8 +3,7 @@ name: Build Dev Ubuntu Resolute
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # Every day at 00:00 while resolute is under heavy development
-    # - cron: '0 0 * * SUN'  # 00:00 on Sunday.
+    - cron: '0 0 * * SUN'  # 00:00 on Sunday.
 
 permissions:
       packages: write
