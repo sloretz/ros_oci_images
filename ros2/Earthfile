@@ -12,6 +12,14 @@ rolling:
         --ROS_DISTRO='rolling' \
         --UBUNTU_IMAGE='ubuntu:noble'
 
+lyrical:
+    ARG image_name='ros'
+    ARG registry='localhost/'
+    DO +ROS_BINARY_IMAGES \
+        --registry=$registry \
+        --image_name=$image_name \
+        --ROS_DISTRO='lyrical' \
+        --UBUNTU_IMAGE='ubuntu:resolute'
 
 kilted:
     ARG image_name='ros'

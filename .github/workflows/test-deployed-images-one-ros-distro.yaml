@@ -10,6 +10,7 @@ on:
         - humble
         - jazzy
         - kilted
+        - lyrical
         - rolling
       image_registry:
         description: The container registry to pull from
