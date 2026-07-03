@@ -9,6 +9,10 @@ rolling:
     ARG image_name='ros'
     BUILD --pass-args ros2+rolling
 
+lyrical:
+    ARG registry='localhost/'
+    ARG image_name='ros'
+    BUILD --pass-args ros2+lyrical
 
 kilted:
     ARG registry='localhost/'
@@ -48,6 +52,10 @@ rolling-multiarch:
     ARG image_name='ros'
     BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +rolling
 
+lyrical-multiarch:
+    ARG registry='localhost/'
+    ARG image_name='ros'
+    BUILD --pass-args --platform=linux/amd64 --platform=linux/arm64/v8 +lyrical
 
 kilted-multiarch:
     ARG registry='localhost/'

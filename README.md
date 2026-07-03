@@ -48,6 +48,13 @@ All images are based on Ubuntu.
 | perception      | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-perception`    |
 | simulation      | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-simulation`    |
 | desktop-full    | ✅     | ✅        | `ghcr.io/sloretz/ros:kilted-desktop-full`  |
+| [ROS Lyrical](http://docs.ros.org/en/lyrical)                                      |
+| ros-core        | ✅     | ✅        | `ghcr.io/sloretz/ros:lyrical-ros-core`      |
+| ros-base        | ✅     | ✅        | `ghcr.io/sloretz/ros:lyrical-ros-base`      |
+| desktop         | ✅     | ✅        | `ghcr.io/sloretz/ros:lyrical-desktop`       |
+| perception      | ✅     | ✅        | `ghcr.io/sloretz/ros:lyrical-perception`    |
+| simulation      | ✅     | ✅        | `ghcr.io/sloretz/ros:lyrical-simulation`    |
+| desktop-full    | ✅     | ✅        | `ghcr.io/sloretz/ros:lyrical-desktop-full`  |
 | [ROS Rolling](http://docs.ros.org/en/rolling)                                      |
 | ros-core        | ✅     | ✅        | `ghcr.io/sloretz/ros:rolling-ros-core`     |
 | ros-base        | ✅     | ✅        | `ghcr.io/sloretz/ros:rolling-ros-base`     |
