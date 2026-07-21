@@ -10,7 +10,7 @@ rolling:
         --registry=$registry \
         --image_name=$image_name \
         --ROS_DISTRO='rolling' \
-        --UBUNTU_IMAGE='ubuntu:noble'
+        --UBUNTU_IMAGE='ubuntu:resolute'
 
 lyrical:
     ARG image_name='ros'
