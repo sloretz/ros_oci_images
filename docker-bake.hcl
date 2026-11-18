@@ -24,97 +24,119 @@ variable "USE_TESTING_REPO" {
   default = "false"
 }
 
+variable "VARIANTS" {
+  default = [
+    "ros-core",
+    "ros-base",
+    "desktop",
+    "perception",
+    "simulation",
+    "desktop-full",
+  ]
+}
+
 group "default" {
   targets = ["ros2", "ros-dev"]
 }
 
-group "rolling" {
-  targets = [
-    "rolling-ros-core",
-    "rolling-ros-base",
-    "rolling-desktop",
-    "rolling-perception",
-    "rolling-simulation",
-    "rolling-desktop-full",
-  ]
+group "ros2" {
+  targets = ["rolling", "lyrical", "kilted", "jazzy", "humble"]
 }
 
-group "lyrical" {
-  targets = [
-    "lyrical-ros-core",
-    "lyrical-ros-base",
-    "lyrical-desktop",
-    "lyrical-perception",
-    "lyrical-simulation",
-    "lyrical-desktop-full",
-  ]
+target "_ros2" {
+  context    = "."
+  dockerfile = "ros.Dockerfile"
+  platforms  = ["linux/amd64", "linux/arm64/v8"]
 }
 
-group "kilted" {
-  targets = [
-    "kilted-ros-core",
-    "kilted-ros-base",
-    "kilted-desktop",
-    "kilted-perception",
-    "kilted-simulation",
-    "kilted-desktop-full",
-  ]
-}
-
-group "jazzy" {
-  targets = [
-    "jazzy-ros-core",
-    "jazzy-ros-base",
-    "jazzy-desktop",
-    "jazzy-perception",
-    "jazzy-simulation",
-    "jazzy-desktop-full",
-  ]
-}
-
-group "humble" {
-  targets = [
-    "humble-ros-core",
-    "humble-ros-base",
-    "humble-desktop",
-    "humble-perception",
-    "humble-simulation",
-    "humble-desktop-full",
-  ]
-}
-
-target "ros2" {
-  name = "${distro.name}-${variant}"
+target "rolling" {
+  inherits = ["_ros2"]
+  name     = "rolling-${variant}"
   matrix = {
-    distro = [
-      { name = "rolling", ubuntu = "ubuntu:resolute" },
-      { name = "lyrical", ubuntu = "ubuntu:resolute" },
-      { name = "kilted", ubuntu = "ubuntu:noble" },
-      { name = "jazzy", ubuntu = "ubuntu:noble" },
-      { name = "humble", ubuntu = "ubuntu:jammy" },
-    ]
-    variant = [
-      "ros-core",
-      "ros-base",
-      "desktop",
-      "perception",
-      "simulation",
-      "desktop-full",
-    ]
+    variant = VARIANTS
   }
-  context    = "./ros2"
-  dockerfile = "Dockerfile"
-  target     = variant
+  target = variant
   args = {
-    ROS_DISTRO       = distro.name
-    UBUNTU_IMAGE     = distro.ubuntu
+    ROS_DISTRO       = "rolling"
+    UBUNTU_IMAGE     = "ubuntu:resolute"
     use_testing_repo = USE_TESTING_REPO
   }
   tags = [
-    "${REGISTRY}/${ROS_IMAGE_NAME}:${distro.name}-${variant}${TAG_SUFFIX}",
-    "${REGISTRY}/${ROS_IMAGE_NAME}:${distro.name}-${variant}-${DATE}${TAG_SUFFIX}",
+    "${REGISTRY}/${ROS_IMAGE_NAME}:rolling-${variant}${TAG_SUFFIX}",
+    "${REGISTRY}/${ROS_IMAGE_NAME}:rolling-${variant}-${DATE}${TAG_SUFFIX}",
   ]
-  platforms = ["linux/amd64", "linux/arm64/v8"]
+}
+
+target "lyrical" {
+  inherits = ["_ros2"]
+  name     = "lyrical-${variant}"
+  matrix = {
+    variant = VARIANTS
+  }
+  target = variant
+  args = {
+    ROS_DISTRO       = "lyrical"
+    UBUNTU_IMAGE     = "ubuntu:resolute"
+    use_testing_repo = USE_TESTING_REPO
+  }
+  tags = [
+    "${REGISTRY}/${ROS_IMAGE_NAME}:lyrical-${variant}${TAG_SUFFIX}",
+    "${REGISTRY}/${ROS_IMAGE_NAME}:lyrical-${variant}-${DATE}${TAG_SUFFIX}",
+  ]
+}
+
+target "kilted" {
+  inherits = ["_ros2"]
+  name     = "kilted-${variant}"
+  matrix = {
+    variant = VARIANTS
+  }
+  target = variant
+  args = {
+    ROS_DISTRO       = "kilted"
+    UBUNTU_IMAGE     = "ubuntu:noble"
+    use_testing_repo = USE_TESTING_REPO
+  }
+  tags = [
+    "${REGISTRY}/${ROS_IMAGE_NAME}:kilted-${variant}${TAG_SUFFIX}",
+    "${REGISTRY}/${ROS_IMAGE_NAME}:kilted-${variant}-${DATE}${TAG_SUFFIX}",
+  ]
+}
+
+target "jazzy" {
+  inherits = ["_ros2"]
+  name     = "jazzy-${variant}"
+  matrix = {
+    variant = VARIANTS
+  }
+  target = variant
+  args = {
+    ROS_DISTRO       = "jazzy"
+    UBUNTU_IMAGE     = "ubuntu:noble"
+    use_testing_repo = USE_TESTING_REPO
+  }
+  tags = [
+    "${REGISTRY}/${ROS_IMAGE_NAME}:jazzy-${variant}${TAG_SUFFIX}",
+    "${REGISTRY}/${ROS_IMAGE_NAME}:jazzy-${variant}-${DATE}${TAG_SUFFIX}",
+  ]
+}
+
+target "humble" {
+  inherits = ["_ros2"]
+  name     = "humble-${variant}"
+  matrix = {
+    variant = VARIANTS
+  }
+  target = variant
+  args = {
+    ROS_DISTRO       = "humble"
+    UBUNTU_IMAGE     = "ubuntu:jammy"
+    use_testing_repo = USE_TESTING_REPO
+  }
+  tags = [
+    "${REGISTRY}/${ROS_IMAGE_NAME}:humble-${variant}${TAG_SUFFIX}",
+    "${REGISTRY}/${ROS_IMAGE_NAME}:humble-${variant}-${DATE}${TAG_SUFFIX}",
+  ]
 }
 
 target "ros-dev" {
@@ -122,8 +144,8 @@ target "ros-dev" {
   matrix = {
     ubuntu = ["resolute", "noble", "jammy"]
   }
-  context    = "./ros-dev"
-  dockerfile = "Dockerfile"
+  context    = "."
+  dockerfile = "ros-dev.Dockerfile"
   args = {
     UBUNTU_IMAGE = "ubuntu:${ubuntu}"
   }

@@ -43,23 +43,22 @@ The build pushes the images to [Github Packages](https://github.com/features/pac
 There is a top-level [docker-bake.hcl](docker-bake.hcl) which defines all targets, variants, and supported platforms.
 For example, run `docker buildx bake --set "*.platform=linux/amd64" jazzy` to build the Jazzy images natively on amd64.
 
-#### The ros2 and ros-dev folders
+#### Image definitions
 
-The `ros2` folder has a multi-stage `Dockerfile` used to create images with ROS 2 installed from debian packages.
+* `ros.Dockerfile` is a multi-stage Dockerfile used to create ROS 2 images from debian packages for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
+* `ros-dev.Dockerfile` creates Ubuntu dev container images with ROS developer tools installed (see [doc/ros-dev.md](doc/ros-dev.md)).
+* `docker-bake.hcl` defines targets for each active ROS 2 distro and `ros-dev` Ubuntu release.
+
 The ROS 2 definitions were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/rolling/ubuntu/jammy).
 The Dockerfiles don't need to match the Dockerfiles in [osrf/docker_images](https://github.com/osrf/docker_images), but they should stay close.
 
-*  `ros2/Dockerfile` defines stages for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
-*  `docker-bake.hcl` defines targets for each active ROS 2 distro and `ros-dev` Ubuntu release.
-
-If you think there should be a new folder in `ros2` (ex: a navigation image with Nav2, or a moveit2 image) then please [propose a new variant to REP 2001 first](https://github.com/ros-infrastructure/rep/blob/master/rep-2001.rst) as a pull request to the [ros-infrastructure/rep repo](https://github.com/ros-infrastructure/rep).
+If you think there should be a new ROS 2 image variant (ex: a navigation image with Nav2, or a moveit2 image) then please [propose a new variant to REP 2001 first](https://github.com/ros-infrastructure/rep/blob/master/rep-2001.rst) as a pull request to the [ros-infrastructure/rep repo](https://github.com/ros-infrastructure/rep).
 
 #### The scripts folder
 
 The `scripts` folder holds miscellaneous scripts used by the github actions in this repository.
 
-* `test_images.py` invokes docker to run commands in all images for one ROS distro.
-    Inside it is another hardcoded copy of the knowledge of what architectures are supported by each ROS distro.
+* `test_images.py` invokes docker to run commands in all images for one ROS distro, reading variants and platforms from `docker-bake.hcl`.
     Run `./scripts/test_images.py --help` to see what options it takes.
 * `install_dependencies.bash` installs `qemu-user-static` on an Ubuntu 22.04 machine.
 * `is_new_version_available.py` checks if there's a new verion of a debian package.

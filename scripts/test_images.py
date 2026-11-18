@@ -15,12 +15,26 @@
 # limitations under the License.
 
 import argparse
+import json
 import subprocess
 
 
-# TODO(sloretz) share implementation with build_images.py
 def _full_name(registry, name, tag):
     return f"{registry}/{name}:{tag}"
+
+
+def _bake_targets(ros_distro):
+    output = subprocess.check_output(
+        ["docker", "buildx", "bake", "--print", ros_distro],
+        text=True,
+    )
+    definition = json.loads(output)
+    combos = []
+    for target_cfg in definition["target"].values():
+        variant = target_cfg["target"]
+        for platform in target_cfg["platforms"]:
+            combos.append((variant, platform))
+    return combos
 
 
 def _pull(full_name, dry_run):
@@ -72,30 +86,12 @@ def main():
     ros_distro = args.rosdistro.lower()
     dry_run = args.dry_run
 
-    amd64 = "linux/amd64"
-    armhf = "linux/arm/v7"
-    arm64 = "linux/arm64/v8"
-
-    combos = [
-        ("ros-core", amd64),
-        ("ros-base", amd64),
-        ("desktop", amd64),
-        ("perception", amd64),
-        ("simulation", amd64),
-        ("desktop-full", amd64),
-        ("ros-core", arm64),
-        ("ros-base", arm64),
-        ("desktop", arm64),
-        ("perception", arm64),
-        ("simulation", arm64),
-        ("desktop-full", arm64),
-    ]
-    for image, platform in combos:
+    for image, platform in _bake_targets(ros_distro):
         tag = f"{ros_distro}-{image}"
         package = f"ros-{ros_distro}-{image}"
         full_name = _full_name(args.registry, args.name, tag)
         _pull(full_name, dry_run)
-        _print_pkg_version(full_name, package, platform, args.dry_run)
+        _print_pkg_version(full_name, package, platform, dry_run)
         _print_ros2_help(full_name, platform, dry_run)
 
 
