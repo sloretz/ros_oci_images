@@ -58,8 +58,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
-      - name: Install dependencies
-        run: ./scripts/install_dependencies.bash
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@53851d14592bedcffcf25ea515637cff71ef929a  # v3.3.0
 
       - name: Test Deployed Images (Dry run)
         run: |

@@ -52,9 +52,8 @@ jobs:
           swap-storage: true
       - name: Set up QEMU
         uses: docker/setup-qemu-action@53851d14592bedcffcf25ea515637cff71ef929a  # v3.3.0
-      - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
-        with:
-          version: v0.8.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
@@ -70,7 +69,11 @@ jobs:
             registry: ${{ inputs.image_registry }}
 
       - name: Build and Push Images
-        run: earthly --ci --push +${{ inputs.ros_distro }}-multiarch --registry=${{ inputs.image_registry }}/ --image_name=${{ inputs.image_name }}
+        run: |
+          docker buildx bake --push \
+            --var REGISTRY=${{ inputs.image_registry }} \
+            --var ROS_IMAGE_NAME=${{ inputs.image_name }} \
+            ${{ inputs.ros_distro }}
 
   call-test-deployed-images:
     needs: build-and-deploy

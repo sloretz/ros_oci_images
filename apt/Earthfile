@@ -1,8 +1,0 @@
-VERSION 0.8
-
-INSTALL:
-    FUNCTION
-    ARG packages
-    RUN apt-get update && apt-get install -y --no-install-recommends \
-        $packages \
-        && rm -rf /var/lib/apt/lists/*

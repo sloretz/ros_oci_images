@@ -13,4 +13,4 @@ jobs:
   build-dev-ubuntu-noble:
     uses: ./.github/workflows/build-dev.yaml
     with:
-      earthly_target: +ros-dev-ubuntu-noble
+      bake_target: ros-dev-ubuntu-noble

@@ -13,4 +13,4 @@ jobs:
   build-dev-ubuntu-resolute:
     uses: ./.github/workflows/build-dev.yaml
     with:
-      earthly_target: +ros-dev-ubuntu-resolute
+      bake_target: ros-dev-ubuntu-resolute

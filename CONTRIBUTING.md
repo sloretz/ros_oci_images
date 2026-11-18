@@ -26,9 +26,8 @@ If it's not accepted there, then please create an issue on this repository and w
 
 Install these to build and test images:
 
-* `qemu-user-static` version 6.2
-* `docker` not sure what version. 24.0.5 works.
-* `earthly` version 0.8
+* `qemu-user-static` version 6.2 (only needed for cross-architecture builds)
+* `docker` with `docker buildx` (Docker 24.0+ / Buildx 0.13+ for `matrix` support in `docker-bake.hcl`)
 
 Install this to lint source code:
 
@@ -37,36 +36,30 @@ Install this to lint source code:
 
 ### Repository Structure
 
-This repo uses [Earthly](https://docs.earthly.dev/) to build and push OCI images from [Earthfiles](https://docs.earthly.dev/docs/earthfile).
-The Earthfiles create OCI Images for each active [ROS distro](http://docs.ros.org/en/rolling/Releases.html).
-The Earthfiles push the images to [Github Packages](https://github.com/features/packages).
+This repo uses [Docker Buildx Bake](https://docs.docker.com/build/bake/) to build and push OCI images from Dockerfiles.
+The Dockerfiles create OCI Images for each active [ROS distro](http://docs.ros.org/en/rolling/Releases.html).
+The build pushes the images to [Github Packages](https://github.com/features/packages).
 
-There is a top-level Earthfile which imports from Earthfiles in subfolders.
-The top-level Earthfile defines what platforms each ROS distro's images are built for.
+There is a top-level [docker-bake.hcl](docker-bake.hcl) which defines all targets, variants, and supported platforms.
+For example, run `docker buildx bake --set "*.platform=linux/amd64" jazzy` to build the Jazzy images natively on amd64.
 
-#### The ros1 and ros2 folders
+#### Image definitions
 
-The `ros2` folder has an Earthfile used to create images with ROS 2 installed from debian packages.
-The ROS 2 definitions  were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/rolling/ubuntu/jammy).
-The Earthfiles don't need to match the Dockerfiles in [osrf/docker_images](https://github.com/osrf/docker_images), but they should stay close.
+* `ros.Dockerfile` is a multi-stage Dockerfile used to create ROS 2 images from debian packages for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
+* `ros-dev.Dockerfile` creates Ubuntu dev container images with ROS developer tools installed (see [doc/ros-dev.md](doc/ros-dev.md)).
+* `docker-bake.hcl` defines targets for each active ROS 2 distro and `ros-dev` Ubuntu release.
 
-*  `ros2/Earthfile` defines a target for each active ROS 2 distro.
-    Each target creates an OCI image for each [variant defined by REP 2001](https://ros.org/reps/rep-2001.html).
+The ROS 2 definitions were taken from [here](https://github.com/osrf/docker_images/tree/3d7df313d1b9be171f5aa87b5daa097354f753ea/ros/rolling/ubuntu/jammy).
+The Dockerfiles don't need to match the Dockerfiles in [osrf/docker_images](https://github.com/osrf/docker_images), but they should stay close.
 
-If you think there should be a new folder in `ros2` (ex: a navigation image with Nav2, or a moveit2 image) then please [propose a new variant to REP 2001 first](https://github.com/ros-infrastructure/rep/blob/master/rep-2001.rst) as a pull request to the [ros-infrastructure/rep repo](https://github.com/ros-infrastructure/rep).
-
-#### The apt folder
-
-`apt/Earthfile` contains utilities for using the apt package manager in Earthfiles.
+If you think there should be a new ROS 2 image variant (ex: a navigation image with Nav2, or a moveit2 image) then please [propose a new variant to REP 2001 first](https://github.com/ros-infrastructure/rep/blob/master/rep-2001.rst) as a pull request to the [ros-infrastructure/rep repo](https://github.com/ros-infrastructure/rep).
 
 #### The scripts folder
 
 The `scripts` folder holds miscellaneous scripts used by the github actions in this repository.
 
-* `test_images.py` invokes docker to run commands in all images for one ROS distro.
-    Inside it is another hardcoded copy of the knowledge of what architectures are supported by each ROS distro.
+* `test_images.py` invokes docker to run commands in all images for one ROS distro, reading variants and platforms from `docker-bake.hcl`.
     Run `./scripts/test_images.py --help` to see what options it takes.
-* `install_dependencies.bash` installs `qemu-user-static` on an Ubuntu 22.04 machine.
 * `is_new_version_available.py` checks if there's a new verion of a debian package.
     This is used to determine when new images need to be built after a ROS distro's packages get sync'd to the main apt repo.
 
