@@ -60,7 +60,6 @@ The `scripts` folder holds miscellaneous scripts used by the github actions in t
 
 * `test_images.py` invokes docker to run commands in all images for one ROS distro, reading variants and platforms from `docker-bake.hcl`.
     Run `./scripts/test_images.py --help` to see what options it takes.
-* `install_dependencies.bash` installs `qemu-user-static` on an Ubuntu 22.04 machine.
 * `is_new_version_available.py` checks if there's a new verion of a debian package.
     This is used to determine when new images need to be built after a ROS distro's packages get sync'd to the main apt repo.
 
