@@ -1,0 +1,78 @@
+ARG UBUNTU_IMAGE=ubuntu:noble
+
+FROM ${UBUNTU_IMAGE}
+
+# Setup timezone
+RUN echo 'Etc/UTC' > /etc/timezone && \
+    ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
+# Install packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    jq \
+    lsb-release \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+# Setup keys and apt sources
+RUN set -eux; \
+    export ROS_APT_SOURCE_VERSION=$(curl --retry 5 -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | jq -r ".tag_name"); \
+    curl --retry 5 -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(lsb_release -sc)_all.deb"; \
+    apt-get install -y /tmp/ros2-apt-source.deb; \
+    rm /tmp/ros2-apt-source.deb
+
+# Setup environment
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+# Install ROS Developer tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-pytest-cov \
+    python3-flake8-blind-except \
+    python3-flake8-class-newline \
+    python3-flake8-deprecated \
+    python3-pytest-repeat \
+    python3-pytest-rerunfailures \
+    ros-dev-tools \
+    python3-colcon-mixin \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user
+# https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+ARG USERNAME=ros
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Delete ubuntu user if it exists (Ubuntu Noble)
+RUN if id -u $USER_UID ; then userdel $(id -un $USER_UID) ; fi
+
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s $(which bash) \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Set the default user.
+USER $USERNAME
+
+# Bootstrap rosdep
+RUN sudo --preserve-env rosdep init && \
+    rosdep update
+
+# Setup colcon mixin and metadata
+RUN cd /tmp && \
+    colcon mixin add default \
+    https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
+    colcon mixin update && \
+    colcon metadata add default \
+    https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
+    colcon metadata update
+
+LABEL devcontainer.metadata=" \
+    [ \
+        { \
+            \"remoteUser\": \"ros\", \
+            \"capAdd\": [\"SYS_PTRACE\"] \
+        } \
+    ]"

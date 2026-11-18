@@ -13,4 +13,4 @@ jobs:
   build-dev-ubuntu-jammy:
     uses: ./.github/workflows/build-dev.yaml
     with:
-      earthly_target: +ros-dev-ubuntu-jammy
+      bake_target: ros-dev-ubuntu-jammy

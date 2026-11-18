@@ -11,13 +11,13 @@ on:
         description: The name of the image
         default: "ros-dev"
         type: string
-      earthly_target:
+      bake_target:
         type: choice
         options:
-          - "+ros-dev-ubuntu-resolute-multiarch"
-          - "+ros-dev-ubuntu-noble-multiarch"
-          - "+ros-dev-ubuntu-jammy-multiarch"
-        description: The earthly target to build including a '+' sign at the start.
+          - "ros-dev-ubuntu-resolute"
+          - "ros-dev-ubuntu-noble"
+          - "ros-dev-ubuntu-jammy"
+        description: The docker buildx bake target to build.
   workflow_call:
     inputs:
       image_registry:
@@ -28,8 +28,8 @@ on:
         description: The name of the image
         default: "ros-dev"
         type: string
-      earthly_target:
-        description: The earthly target to build including a '+' sign at the start.
+      bake_target:
+        description: The docker buildx bake target to build.
         required: true
         type: string
 
@@ -43,14 +43,12 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-22.04
     steps:
-      - uses: earthly/actions-setup@43211c7a0eae5344d6d79fb4aaf209c8f8866203  # v1.0.13
-        with:
-          version: v0.8.0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@53851d14592bedcffcf25ea515637cff71ef929a  # v3.3.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
-
-      - name: Install dependencies
-        run: ./scripts/install_dependencies.bash
 
       - name: Log in to ghcr.io
         uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98  # v1.4.4
@@ -65,7 +63,7 @@ jobs:
 
       - name: Build and Push Images
         run: |
-          earthly --ci --push \
-            ${{ inputs.earthly_target }} \
-            --registry=${{ inputs.image_registry }}/ \
-            --image_name=${{ inputs.image_name }}
+          docker buildx bake --push \
+            --var REGISTRY=${{ inputs.image_registry }} \
+            --var ROS_DEV_IMAGE_NAME=${{ inputs.image_name }} \
+            ${{ inputs.bake_target }}
